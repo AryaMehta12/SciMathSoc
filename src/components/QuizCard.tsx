@@ -78,53 +78,41 @@ export const QuizCard = ({
   };
 
   return (
-    <div className="min-h-screen bg-gradient-subtle flex items-center justify-center p-4">
+    <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <div className="w-full max-w-2xl">
         {/* Header */}
         <div className="mb-6 space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-gradient-academic rounded-full flex items-center justify-center">
-                <Brain className="w-5 h-5 text-white" />
+              <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
+                <Brain className="w-4 h-4 text-primary-foreground" />
               </div>
               <div>
-                <h1 className="text-xl font-bold text-foreground">Hey {playerName}!</h1>
-                <p className="text-sm text-muted-foreground">Question {questionNumber} of {totalQuestions}</p>
+                <h1 className="text-lg font-medium text-foreground">{playerName}</h1>
+                <p className="text-sm text-muted-foreground">{questionNumber}/{totalQuestions}</p>
               </div>
             </div>
             <div className="text-right">
-              <div className="flex items-center space-x-2">
-                <Award className="w-5 h-5 text-primary" />
-                <span className="text-2xl font-bold text-primary">{score.toFixed(1)}</span>
+              <div className="flex items-center space-x-1">
+                <Award className="w-4 h-4 text-foreground" />
+                <span className="text-xl font-bold text-foreground">{score.toFixed(1)}</span>
               </div>
-              <p className="text-xs text-muted-foreground">points</p>
             </div>
           </div>
           
-          <Progress value={progress} className="h-2" />
+          <Progress value={progress} className="h-1" />
         </div>
 
         {/* Question Card */}
-        <Card className={`shadow-question border-0 transition-all duration-500 ${
+        <Card className={`border transition-all duration-500 ${
           hasAnswered 
             ? (selectedAnswer.toLowerCase().trim() === question.correctAnswer.toLowerCase().trim() || textInput.toLowerCase().trim() === question.correctAnswer.toLowerCase().trim())
-              ? 'shadow-success animate-pulse-success' 
-              : 'shadow-error'
+              ? 'border-success' 
+              : 'border-destructive'
             : ''
         }`}>
           <CardHeader className="pb-4">
-            <div className="flex items-center justify-between mb-2">
-              <div className="flex items-center space-x-2">
-                <span className="text-2xl">{getSubjectIcon()}</span>
-                <span className="text-sm font-medium text-muted-foreground uppercase tracking-wide">
-                  {question.subject}
-                </span>
-              </div>
-              <span className={`text-sm font-medium uppercase tracking-wide ${getDifficultyColor()}`}>
-                {question.difficulty}
-              </span>
-            </div>
-            <CardTitle className="text-xl leading-relaxed">
+            <CardTitle className="text-xl text-foreground">
               {question.question}
             </CardTitle>
           </CardHeader>
@@ -211,16 +199,16 @@ export const QuizCard = ({
               <Button 
                 onClick={handleSubmit}
                 disabled={question.type === 'multiple-choice' ? !selectedAnswer : !textInput.trim()}
-                className="w-full py-6 text-lg font-medium bg-gradient-primary hover:opacity-90 transition-all duration-300"
+                className="w-full py-4 font-medium"
               >
-                Submit Answer
+                Submit
               </Button>
             )}
 
             {/* Result feedback */}
             {hasAnswered && (
-              <div className="text-center pt-4 border-t border-border">
-                <div className={`inline-flex items-center space-x-2 px-4 py-2 rounded-full ${
+              <div className="text-center pt-4 border-t">
+                <div className={`inline-flex items-center space-x-2 px-3 py-1 rounded text-sm ${
                   (selectedAnswer.toLowerCase().trim() === question.correctAnswer.toLowerCase().trim() || 
                    textInput.toLowerCase().trim() === question.correctAnswer.toLowerCase().trim())
                     ? 'bg-success/10 text-success' 
@@ -229,13 +217,13 @@ export const QuizCard = ({
                   {(selectedAnswer.toLowerCase().trim() === question.correctAnswer.toLowerCase().trim() || 
                     textInput.toLowerCase().trim() === question.correctAnswer.toLowerCase().trim()) ? (
                     <>
-                      <CheckCircle className="w-5 h-5" />
-                      <span className="font-medium">+1.0 point</span>
+                      <CheckCircle className="w-4 h-4" />
+                      <span>+1.0</span>
                     </>
                   ) : (
                     <>
-                      <XCircle className="w-5 h-5" />
-                      <span className="font-medium">-0.3 points</span>
+                      <XCircle className="w-4 h-4" />
+                      <span>-0.3</span>
                     </>
                   )}
                 </div>
