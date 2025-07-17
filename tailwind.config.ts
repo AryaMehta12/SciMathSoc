@@ -26,7 +26,9 @@ export default {
 				foreground: 'hsl(var(--foreground))',
 				primary: {
 					DEFAULT: 'hsl(var(--primary))',
-					foreground: 'hsl(var(--primary-foreground))'
+					foreground: 'hsl(var(--primary-foreground))',
+					light: 'hsl(var(--primary-light))',
+					dark: 'hsl(var(--primary-dark))'
 				},
 				secondary: {
 					DEFAULT: 'hsl(var(--secondary))',
@@ -35,6 +37,10 @@ export default {
 				destructive: {
 					DEFAULT: 'hsl(var(--destructive))',
 					foreground: 'hsl(var(--destructive-foreground))'
+				},
+				success: {
+					DEFAULT: 'hsl(var(--success))',
+					foreground: 'hsl(var(--success-foreground))'
 				},
 				muted: {
 					DEFAULT: 'hsl(var(--muted))',
@@ -84,11 +90,67 @@ export default {
 					to: {
 						height: '0'
 					}
+				},
+				'slide-in-right': {
+					'0%': { 
+						transform: 'translateX(100%)',
+						opacity: '0'
+					},
+					'100%': { 
+						transform: 'translateX(0)',
+						opacity: '1'
+					}
+				},
+				'slide-out-left': {
+					'0%': { 
+						transform: 'translateX(0)',
+						opacity: '1'
+					},
+					'100%': { 
+						transform: 'translateX(-100%)',
+						opacity: '0'
+					}
+				},
+				'bounce-in': {
+					'0%': { 
+						transform: 'scale(0.95)',
+						opacity: '0'
+					},
+					'50%': { 
+						transform: 'scale(1.02)'
+					},
+					'100%': { 
+						transform: 'scale(1)',
+						opacity: '1'
+					}
+				},
+				'pulse-success': {
+					'0%, 100%': { 
+						boxShadow: '0 0 0 0 hsl(var(--success) / 0.4)'
+					},
+					'50%': { 
+						boxShadow: '0 0 0 10px hsl(var(--success) / 0)'
+					}
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'slide-in-right': 'slide-in-right 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+				'slide-out-left': 'slide-out-left 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+				'bounce-in': 'bounce-in 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55)',
+				'pulse-success': 'pulse-success 1.5s ease-in-out infinite'
+			},
+			backgroundImage: {
+				'gradient-academic': 'var(--gradient-academic)',
+				'gradient-primary': 'var(--gradient-primary)',
+				'gradient-subtle': 'var(--gradient-subtle)'
+			},
+			boxShadow: {
+				'card': 'var(--shadow-card)',
+				'question': 'var(--shadow-question)',
+				'success': 'var(--shadow-success)',
+				'error': 'var(--shadow-error)'
 			}
 		}
 	},
