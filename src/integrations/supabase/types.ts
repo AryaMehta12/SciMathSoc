@@ -14,7 +14,118 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      leaderboard_cache: {
+        Row: {
+          accuracy: number
+          completion_time: number
+          created_at: string | null
+          id: string
+          name: string
+          rank: number | null
+          roll_number: string | null
+          score: number
+          updated_at: string | null
+        }
+        Insert: {
+          accuracy: number
+          completion_time: number
+          created_at?: string | null
+          id?: string
+          name: string
+          rank?: number | null
+          roll_number?: string | null
+          score: number
+          updated_at?: string | null
+        }
+        Update: {
+          accuracy?: number
+          completion_time?: number
+          created_at?: string | null
+          id?: string
+          name?: string
+          rank?: number | null
+          roll_number?: string | null
+          score?: number
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "leaderboard_cache_roll_number_fkey"
+            columns: ["roll_number"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["roll_number"]
+          },
+        ]
+      }
+      quiz_attempts: {
+        Row: {
+          accuracy: number
+          answers_data: Json | null
+          completion_time: number
+          created_at: string | null
+          id: string
+          questions_answered: number
+          roll_number: string | null
+          score: number
+        }
+        Insert: {
+          accuracy: number
+          answers_data?: Json | null
+          completion_time: number
+          created_at?: string | null
+          id?: string
+          questions_answered: number
+          roll_number?: string | null
+          score: number
+        }
+        Update: {
+          accuracy?: number
+          answers_data?: Json | null
+          completion_time?: number
+          created_at?: string | null
+          id?: string
+          questions_answered?: number
+          roll_number?: string | null
+          score?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quiz_attempts_roll_number_fkey"
+            columns: ["roll_number"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["roll_number"]
+          },
+        ]
+      }
+      users: {
+        Row: {
+          created_at: string | null
+          email: string | null
+          has_participated: boolean | null
+          last_participation_date: string | null
+          name: string
+          roll_number: string
+        }
+        Insert: {
+          created_at?: string | null
+          email?: string | null
+          has_participated?: boolean | null
+          last_participation_date?: string | null
+          name: string
+          roll_number: string
+        }
+        Update: {
+          created_at?: string | null
+          email?: string | null
+          has_participated?: boolean | null
+          last_participation_date?: string | null
+          name?: string
+          roll_number?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

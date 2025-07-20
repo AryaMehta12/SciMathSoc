@@ -171,10 +171,12 @@ export default {
 			},
 			boxShadow: {
 				'card': 'var(--shadow-card)',
+				'card-hover': 'var(--shadow-card-hover)',
 				'question': 'var(--shadow-question)',
 				'success': 'var(--shadow-success)',
 				'error': 'var(--shadow-error)',
-				'primary': 'var(--shadow-primary)'
+				'primary': 'var(--shadow-primary)',
+				'glow': 'var(--shadow-glow)'
 			}
 		}
 	},

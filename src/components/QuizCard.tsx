@@ -104,15 +104,28 @@ export const QuizCard = ({
         </div>
 
         {/* Question Card */}
-        <Card className={`border transition-all duration-500 ${
+        <Card className={`border transition-all duration-500 backdrop-blur-sm bg-gradient-to-br from-card/95 to-card/80 ${
           hasAnswered 
             ? (selectedAnswer.toLowerCase().trim() === question.correctAnswer.toLowerCase().trim() || textInput.toLowerCase().trim() === question.correctAnswer.toLowerCase().trim())
-              ? 'border-success' 
-              : 'border-destructive'
-            : ''
+              ? 'border-success shadow-success' 
+              : 'border-destructive shadow-error'
+            : 'shadow-glow hover:shadow-card-hover'
         }`}>
           <CardHeader className="pb-4">
-            <CardTitle className="text-xl text-foreground">
+            <div className="flex items-start justify-between mb-2">
+              <div className="flex items-center space-x-2">
+                <span className="text-2xl">{getSubjectIcon()}</span>
+                <div className="flex items-center space-x-2">
+                  <span className="text-xs font-medium px-2 py-1 rounded-full bg-primary/10 text-primary">
+                    {question.subject.toUpperCase()}
+                  </span>
+                  <span className={`text-xs font-medium px-2 py-1 rounded-full bg-muted ${getDifficultyColor()}`}>
+                    {question.difficulty.toUpperCase()}
+                  </span>
+                </div>
+              </div>
+            </div>
+            <CardTitle className="text-xl text-foreground leading-relaxed">
               {question.question}
             </CardTitle>
           </CardHeader>

@@ -21,11 +21,11 @@ All colors MUST be HSL. */
     --popover: 0 0% 11%;
     --popover-foreground: 0 0% 98%;
 
-    /* Primary theme - indigo accent */
-    --primary: 239 84% 67%;
+    /* Primary theme - darker indigo for SciMathSoc */
+    --primary: 239 84% 45%;
     --primary-foreground: 0 0% 98%;
-    --primary-light: 239 84% 75%;
-    --primary-dark: 239 84% 55%;
+    --primary-light: 239 84% 55%;
+    --primary-dark: 239 84% 35%;
 
     /* Secondary subtle gray */
     --secondary: 0 0% 15%;
@@ -56,16 +56,20 @@ All colors MUST be HSL. */
     --winner-bronze: 30 100% 50%;
     --live-indicator: 120 100% 50%;
 
-    /* Gradients for visual appeal */
-    --gradient-primary: linear-gradient(135deg, hsl(239 84% 67%), hsl(239 84% 55%));
+    /* SciMathSoc gradients and effects */
+    --gradient-primary: linear-gradient(135deg, hsl(239 84% 45%), hsl(239 84% 35%));
+    --gradient-academic: linear-gradient(135deg, hsl(239 84% 45%) 0%, hsl(239 84% 35%) 50%, hsl(259 84% 45%) 100%);
     --gradient-background: linear-gradient(135deg, hsl(0 0% 7%), hsl(0 0% 11%));
     --gradient-card: linear-gradient(135deg, hsl(0 0% 11%), hsl(0 0% 15%));
+    --gradient-subtle: linear-gradient(180deg, hsl(0 0% 11%) 0%, hsl(0 0% 9%) 100%);
 
-    /* Shadows and elevation */
-    --shadow-card: 0 4px 12px hsl(0 0% 0% / 0.3);
-    --shadow-primary: 0 4px 20px hsl(239 84% 67% / 0.2);
+    /* Enhanced shadows with card glow */
+    --shadow-card: 0 4px 12px hsl(0 0% 0% / 0.3), 0 0 0 1px hsl(239 84% 45% / 0.1);
+    --shadow-card-hover: 0 8px 25px hsl(0 0% 0% / 0.4), 0 0 0 1px hsl(239 84% 45% / 0.2), 0 0 20px hsl(239 84% 45% / 0.1);
+    --shadow-primary: 0 4px 20px hsl(239 84% 45% / 0.3);
     --shadow-success: 0 4px 12px hsl(142 76% 36% / 0.2);
     --shadow-error: 0 4px 12px hsl(0 84% 60% / 0.2);
+    --shadow-glow: 0 0 20px hsl(239 84% 45% / 0.15);
 
     /* Animation and transition */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -81,7 +85,7 @@ All colors MUST be HSL. */
     --card-foreground: 0 0% 3.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 3.9%;
-    --primary: 239 84% 67%;
+    --primary: 239 84% 45%;
     --primary-foreground: 0 0% 98%;
     --secondary: 0 0% 96.1%;
     --secondary-foreground: 0 0% 9%;
@@ -91,7 +95,7 @@ All colors MUST be HSL. */
     --accent-foreground: 0 0% 9%;
     --border: 0 0% 89.8%;
     --input: 0 0% 89.8%;
-    --ring: 239 84% 67%;
+    --ring: 239 84% 45%;
   }
 }
 

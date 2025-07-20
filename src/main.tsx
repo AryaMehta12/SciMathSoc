@@ -11,7 +11,7 @@ const queryClient = new QueryClient();
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider defaultTheme="light" storageKey="quiz-theme">
+      <ThemeProvider defaultTheme="dark" storageKey="quiz-theme">
         <BrowserRouter>
           <App />
         </BrowserRouter>

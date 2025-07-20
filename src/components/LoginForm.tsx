@@ -27,73 +27,97 @@ export const LoginForm = ({ onLogin, competitionTimeLeft = "23h 45m", totalParti
   };
 
   return (
-    <div className="min-h-screen bg-gradient-background flex items-center justify-center p-4">
-      <div className="w-full max-w-md space-y-6">
+    <div className="min-h-screen bg-gradient-background flex items-center justify-center p-4 relative overflow-hidden">
+      {/* Background decoration */}
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-primary/5"></div>
+      <div className="absolute top-1/4 left-1/4 w-32 h-32 bg-primary/10 rounded-full blur-3xl animate-pulse"></div>
+      <div className="absolute bottom-1/4 right-1/4 w-24 h-24 bg-primary/5 rounded-full blur-2xl animate-pulse delay-1000"></div>
+      
+      <div className="w-full max-w-md space-y-6 relative z-10">
         {/* Header */}
         <div className="text-center space-y-4">
           <div className="flex items-center justify-center space-x-3 mb-6">
-            <div className="w-16 h-16 bg-gradient-primary rounded-full flex items-center justify-center shadow-primary">
-              <Brain className="w-8 h-8 text-white" />
+            <div className="w-20 h-20 bg-gradient-primary rounded-full flex items-center justify-center shadow-glow">
+              <div className="flex items-center space-x-1">
+                <span className="text-2xl">🧪</span>
+                <span className="text-2xl">📐</span>
+              </div>
             </div>
           </div>
           
-          <h1 className="text-display bg-gradient-primary bg-clip-text text-transparent">
-            Quiz Championship
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-primary-light bg-clip-text text-transparent">
+            SciMathSoc Quiz
           </h1>
           
-          <p className="text-body text-muted-foreground">
-            Showcase your knowledge. Compete for glory.
+          <p className="text-lg text-muted-foreground">
+            Science & Mathematics Society Challenge
           </p>
+          
+          <div className="flex items-center justify-center space-x-4 text-sm text-muted-foreground">
+            <span className="flex items-center space-x-1">
+              <span className="w-2 h-2 bg-success rounded-full animate-pulse"></span>
+              <span>Live Competition</span>
+            </span>
+          </div>
         </div>
 
         {/* Live Stats */}
         <div className="grid grid-cols-2 gap-4">
-          <Card className="bg-gradient-card border-border/50">
+          <Card className="bg-gradient-card border-primary/20 shadow-card backdrop-blur-sm">
             <CardContent className="p-4 text-center">
-              <Clock className="w-5 h-5 text-primary mx-auto mb-2" />
-              <div className="text-lg font-bold text-foreground">{competitionTimeLeft}</div>
-              <div className="text-xs text-muted-foreground">Time Left</div>
+              <div className="flex items-center justify-center space-x-1 mb-2">
+                <span className="text-lg">⏱️</span>
+                <Clock className="w-4 h-4 text-primary" />
+              </div>
+              <div className="text-lg font-bold text-primary">{competitionTimeLeft}</div>
+              <div className="text-xs text-muted-foreground">Time Remaining</div>
             </CardContent>
           </Card>
           
-          <Card className="bg-gradient-card border-border/50">
+          <Card className="bg-gradient-card border-primary/20 shadow-card backdrop-blur-sm">
             <CardContent className="p-4 text-center">
-              <Users className="w-5 h-5 text-primary mx-auto mb-2" />
-              <div className="text-lg font-bold text-foreground">{totalParticipants}</div>
-              <div className="text-xs text-muted-foreground">Participants</div>
+              <div className="flex items-center justify-center space-x-1 mb-2">
+                <span className="text-lg">👥</span>
+                <Users className="w-4 h-4 text-success" />
+              </div>
+              <div className="text-lg font-bold text-success">{totalParticipants}</div>
+              <div className="text-xs text-muted-foreground">Active Players</div>
             </CardContent>
           </Card>
         </div>
 
         {/* Login Form */}
-        <Card className="bg-gradient-card border-border/50 shadow-card">
+        <Card className="bg-gradient-card border-primary/20 shadow-glow backdrop-blur-sm">
           <CardHeader className="text-center pb-4">
-            <CardTitle className="text-heading text-foreground">
-              Enter Competition
+            <CardTitle className="text-xl font-semibold text-foreground flex items-center justify-center space-x-2">
+              <span>🚀</span>
+              <span>Join the Challenge</span>
             </CardTitle>
-            <CardDescription className="text-body">
-              One attempt per participant
+            <CardDescription className="text-muted-foreground">
+              Enter your details to compete with fellow scientists & mathematicians
             </CardDescription>
           </CardHeader>
           
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-6">
             <div className="space-y-2">
-              <label htmlFor="rollNumber" className="text-sm font-medium text-foreground">
-                Roll Number
+              <label htmlFor="rollNumber" className="text-sm font-medium text-foreground flex items-center space-x-2">
+                <span>🎓</span>
+                <span>Roll Number</span>
               </label>
               <Input
                 id="rollNumber"
                 type="text"
-                placeholder="Enter your roll number"
+                placeholder="e.g., 21CS001"
                 value={rollNumber}
                 onChange={(e) => setRollNumber(e.target.value.toUpperCase())}
-                className="bg-input border-border text-foreground placeholder:text-muted-foreground focus:ring-primary"
+                className="bg-input border-primary/20 text-foreground placeholder:text-muted-foreground focus:ring-primary/20 focus:border-primary py-3 text-lg"
               />
             </div>
             
             <div className="space-y-2">
-              <label htmlFor="name" className="text-sm font-medium text-foreground">
-                Full Name
+              <label htmlFor="name" className="text-sm font-medium text-foreground flex items-center space-x-2">
+                <span>👤</span>
+                <span>Full Name</span>
               </label>
               <Input
                 id="name"
@@ -102,37 +126,61 @@ export const LoginForm = ({ onLogin, competitionTimeLeft = "23h 45m", totalParti
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 onKeyPress={(e) => e.key === 'Enter' && handleLogin()}
-                className="bg-input border-border text-foreground placeholder:text-muted-foreground focus:ring-primary"
+                className="bg-input border-primary/20 text-foreground placeholder:text-muted-foreground focus:ring-primary/20 focus:border-primary py-3 text-lg"
               />
             </div>
             
             <Button 
               onClick={handleLogin}
               disabled={!rollNumber.trim() || !name.trim() || isLoading}
-              className="w-full bg-gradient-primary hover:opacity-90 text-white font-medium h-12 shadow-primary"
+              className="w-full bg-gradient-primary hover:shadow-primary text-white font-medium h-14 text-lg transition-all duration-300"
             >
-              {isLoading ? "Joining..." : "Start Quiz"}
+              {isLoading ? (
+                <div className="flex items-center space-x-2">
+                  <div className="w-5 h-5 border-2 border-current border-t-transparent rounded-full animate-spin"></div>
+                  <span>Initializing Quiz...</span>
+                </div>
+              ) : (
+                <div className="flex items-center space-x-2">
+                  <span>⚡</span>
+                  <span>Start Quiz Challenge</span>
+                </div>
+              )}
             </Button>
 
             <div className="text-center pt-2">
               <p className="text-xs text-muted-foreground">
-                Daily competition • Top 3 winners featured
+                One attempt per participant • Real-time leaderboard updates
               </p>
             </div>
           </CardContent>
         </Card>
 
         {/* Competition Info */}
-        <Card className="bg-gradient-card border-border/50">
-          <CardContent className="p-4">
-            <div className="flex items-center space-x-2 mb-3">
-              <Trophy className="w-4 h-4 text-primary" />
-              <span className="text-sm font-medium text-foreground">Daily Prizes</span>
+        <Card className="bg-gradient-card border-primary/20 shadow-card backdrop-blur-sm">
+          <CardContent className="p-6">
+            <div className="flex items-center space-x-2 mb-4">
+              <span className="text-2xl">🏆</span>
+              <span className="text-lg font-semibold text-foreground">SciMathSoc Recognition</span>
             </div>
-            <div className="space-y-1 text-xs text-muted-foreground">
-              <div>🥇 1st Place: Instagram shoutout + Recognition</div>
-              <div>🥈 2nd Place: Instagram shoutout</div>
-              <div>🥉 3rd Place: Instagram shoutout</div>
+            <div className="space-y-2 text-sm">
+              <div className="flex items-center space-x-3 p-2 rounded-lg bg-gradient-to-r from-winner-gold/10 to-transparent">
+                <span className="text-winner-gold text-lg">🥇</span>
+                <span className="text-foreground font-medium">Champion: Certificate + Special Prize</span>
+              </div>
+              <div className="flex items-center space-x-3 p-2 rounded-lg bg-gradient-to-r from-winner-silver/10 to-transparent">
+                <span className="text-winner-silver text-lg">🥈</span>
+                <span className="text-foreground font-medium">Runner-up: Certificate of Excellence</span>
+              </div>
+              <div className="flex items-center space-x-3 p-2 rounded-lg bg-gradient-to-r from-winner-bronze/10 to-transparent">
+                <span className="text-winner-bronze text-lg">🥉</span>
+                <span className="text-foreground font-medium">3rd Place: Certificate of Merit</span>
+              </div>
+            </div>
+            <div className="mt-4 pt-3 border-t border-primary/20 text-center">
+              <p className="text-xs text-muted-foreground">
+                🎯 10 Questions • ⚡ Speed Scoring • 📈 Live Rankings
+              </p>
             </div>
           </CardContent>
         </Card>
