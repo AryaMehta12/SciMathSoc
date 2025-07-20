@@ -67,7 +67,12 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
-				}
+				},
+				// Competition specific colors
+				'winner-gold': 'hsl(var(--winner-gold))',
+				'winner-silver': 'hsl(var(--winner-silver))',
+				'winner-bronze': 'hsl(var(--winner-bronze))',
+				'live-indicator': 'hsl(var(--live-indicator))'
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
@@ -131,6 +136,20 @@ export default {
 					'50%': { 
 						boxShadow: '0 0 0 10px hsl(var(--success) / 0)'
 					}
+				},
+				'shimmer': {
+					'0%': { transform: 'translateX(-100%)' },
+					'100%': { transform: 'translateX(100%)' }
+				},
+				'pulse-glow': {
+					'0%, 100%': { 
+						boxShadow: '0 0 5px hsl(var(--primary))',
+						opacity: '1'
+					},
+					'50%': { 
+						boxShadow: '0 0 20px hsl(var(--primary))',
+						opacity: '0.8'
+					}
 				}
 			},
 			animation: {
@@ -139,18 +158,23 @@ export default {
 				'slide-in-right': 'slide-in-right 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
 				'slide-out-left': 'slide-out-left 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
 				'bounce-in': 'bounce-in 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55)',
-				'pulse-success': 'pulse-success 1.5s ease-in-out infinite'
+				'pulse-success': 'pulse-success 1.5s ease-in-out infinite',
+				'shimmer': 'shimmer 2s infinite',
+				'pulse-glow': 'pulse-glow 2s ease-in-out infinite'
 			},
 			backgroundImage: {
 				'gradient-academic': 'var(--gradient-academic)',
 				'gradient-primary': 'var(--gradient-primary)',
-				'gradient-subtle': 'var(--gradient-subtle)'
+				'gradient-subtle': 'var(--gradient-subtle)',
+				'gradient-background': 'var(--gradient-background)',
+				'gradient-card': 'var(--gradient-card)'
 			},
 			boxShadow: {
 				'card': 'var(--shadow-card)',
 				'question': 'var(--shadow-question)',
 				'success': 'var(--shadow-success)',
-				'error': 'var(--shadow-error)'
+				'error': 'var(--shadow-error)',
+				'primary': 'var(--shadow-primary)'
 			}
 		}
 	},

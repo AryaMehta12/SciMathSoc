@@ -1,37 +1,40 @@
-import { useState } from "react";
-import { QuizWelcome } from "@/components/QuizWelcome";
+
+import { useState, useEffect } from "react";
+import { LoginForm } from "@/components/LoginForm";
 import { QuizCard, Question } from "@/components/QuizCard";
-import { QuizLeaderboard } from "@/components/QuizLeaderboard";
+import { LiveLeaderboard } from "@/components/LiveLeaderboard";
 import { sampleQuestions } from "@/data/questions";
 import { useToast } from "@/hooks/use-toast";
 
-type GameState = 'welcome' | 'playing' | 'results';
+type GameState = 'login' | 'playing' | 'results';
 
-interface Player {
+interface Participant {
+  id: string;
+  rollNumber: string;
   name: string;
   score: number;
   questionsAnswered: number;
   accuracy: number;
+  completionTime: number;
+  timestamp: Date;
 }
 
 const Index = () => {
-  const [gameState, setGameState] = useState<GameState>('welcome');
-  const [currentPlayer, setCurrentPlayer] = useState<Player>({
+  const [gameState, setGameState] = useState<GameState>('login');
+  const [currentParticipant, setCurrentParticipant] = useState<Participant>({
+    id: '',
+    rollNumber: '',
     name: '',
     score: 0,
     questionsAnswered: 0,
-    accuracy: 0
+    accuracy: 0,
+    completionTime: 0,
+    timestamp: new Date()
   });
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [questions, setQuestions] = useState<Question[]>([]);
   const [correctAnswers, setCorrectAnswers] = useState(0);
-  const [leaderboard, setLeaderboard] = useState<Player[]>([
-    { name: 'Alex Chen', score: 47.2, questionsAnswered: 50, accuracy: 96 },
-    { name: 'Sarah Kim', score: 45.8, questionsAnswered: 48, accuracy: 94 },
-    { name: 'Mike Rodriguez', score: 43.1, questionsAnswered: 45, accuracy: 91 },
-    { name: 'Emma Thompson', score: 41.7, questionsAnswered: 44, accuracy: 89 },
-    { name: 'David Park', score: 39.4, questionsAnswered: 42, accuracy: 87 }
-  ]);
+  const [startTime, setStartTime] = useState<Date>(new Date());
 
   const { toast } = useToast();
 
@@ -44,37 +47,47 @@ const Index = () => {
     return shuffled;
   };
 
-  const startQuiz = (name: string) => {
-    const shuffledQuestions = shuffleArray(sampleQuestions).slice(0, 10);
-    setQuestions(shuffledQuestions);
-    setCurrentPlayer({
+  const handleLogin = (rollNumber: string, name: string) => {
+    // In real app, this would validate with Supabase
+    // For now, simulate authentication
+    const participantId = `${rollNumber}_${Date.now()}`;
+    
+    setCurrentParticipant({
+      id: participantId,
+      rollNumber,
       name,
       score: 0,
       questionsAnswered: 0,
-      accuracy: 0
+      accuracy: 0,
+      completionTime: 0,
+      timestamp: new Date()
     });
+
+    const shuffledQuestions = shuffleArray(sampleQuestions);
+    setQuestions(shuffledQuestions);
     setCurrentQuestionIndex(0);
     setCorrectAnswers(0);
+    setStartTime(new Date());
     setGameState('playing');
     
     toast({
       title: "Quiz Started!",
-      description: `Good luck, ${name}! 🚀`
+      description: `Good luck, ${name}! Make it count - you only get one shot! 🚀`
     });
   };
 
   const handleAnswer = (answer: string, isCorrect: boolean) => {
-    const newScore = currentPlayer.score + (isCorrect ? 1 : -0.3);
-    const newQuestionsAnswered = currentPlayer.questionsAnswered + 1;
+    const newScore = currentParticipant.score + (isCorrect ? 1 : -0.3);
+    const newQuestionsAnswered = currentParticipant.questionsAnswered + 1;
     const newCorrectAnswers = correctAnswers + (isCorrect ? 1 : 0);
     const newAccuracy = (newCorrectAnswers / newQuestionsAnswered) * 100;
 
-    setCurrentPlayer({
-      ...currentPlayer,
+    setCurrentParticipant(prev => ({
+      ...prev,
       score: Math.max(0, newScore),
       questionsAnswered: newQuestionsAnswered,
       accuracy: newAccuracy
-    });
+    }));
 
     setCorrectAnswers(newCorrectAnswers);
 
@@ -90,49 +103,45 @@ const Index = () => {
   };
 
   const finishQuiz = () => {
-    const finalPlayer = {
-      ...currentPlayer,
-      score: Math.max(0, currentPlayer.score),
-      accuracy: (correctAnswers / currentPlayer.questionsAnswered) * 100
+    const endTime = new Date();
+    const completionTime = Math.floor((endTime.getTime() - startTime.getTime()) / 1000);
+    
+    const finalParticipant = {
+      ...currentParticipant,
+      score: Math.max(0, currentParticipant.score),
+      accuracy: (correctAnswers / currentParticipant.questionsAnswered) * 100,
+      completionTime,
+      timestamp: endTime
     };
 
-    const newLeaderboard = [...leaderboard, finalPlayer]
-      .sort((a, b) => b.score - a.score)
-      .slice(0, 10);
-
-    setLeaderboard(newLeaderboard);
-    setCurrentPlayer(finalPlayer);
+    setCurrentParticipant(finalParticipant);
     setGameState('results');
 
     toast({
       title: "Quiz Complete!",
-      description: `Final score: ${finalPlayer.score.toFixed(1)} points`
+      description: `Final score: ${finalParticipant.score.toFixed(1)} points in ${Math.floor(completionTime / 60)}m ${completionTime % 60}s`
     });
   };
 
-  const resetQuiz = () => {
-    setGameState('welcome');
+  const resetToLogin = () => {
+    setGameState('login');
     setCurrentQuestionIndex(0);
     setQuestions([]);
     setCorrectAnswers(0);
-  };
-
-  const playAgain = () => {
-    const shuffledQuestions = shuffleArray(sampleQuestions).slice(0, 10);
-    setQuestions(shuffledQuestions);
-    setCurrentQuestionIndex(0);
-    setCorrectAnswers(0);
-    setCurrentPlayer({
-      ...currentPlayer,
+    setCurrentParticipant({
+      id: '',
+      rollNumber: '',
+      name: '',
       score: 0,
       questionsAnswered: 0,
-      accuracy: 0
+      accuracy: 0,
+      completionTime: 0,
+      timestamp: new Date()
     });
-    setGameState('playing');
   };
 
-  if (gameState === 'welcome') {
-    return <QuizWelcome onStartQuiz={startQuiz} />;
+  if (gameState === 'login') {
+    return <LoginForm onLogin={handleLogin} />;
   }
 
   if (gameState === 'playing' && questions.length > 0) {
@@ -141,8 +150,8 @@ const Index = () => {
         question={questions[currentQuestionIndex]}
         questionNumber={currentQuestionIndex + 1}
         totalQuestions={questions.length}
-        score={currentPlayer.score}
-        playerName={currentPlayer.name}
+        score={currentParticipant.score}
+        playerName={currentParticipant.name}
         onAnswer={handleAnswer}
       />
     );
@@ -150,11 +159,9 @@ const Index = () => {
 
   if (gameState === 'results') {
     return (
-      <QuizLeaderboard
-        currentPlayer={currentPlayer}
-        leaderboard={leaderboard}
-        onPlayAgain={playAgain}
-        onGoHome={resetQuiz}
+      <LiveLeaderboard
+        currentParticipant={currentParticipant}
+        onGoHome={resetToLogin}
       />
     );
   }
