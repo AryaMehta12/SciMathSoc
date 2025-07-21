@@ -39,20 +39,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setLoading(true);
       
       // Set RLS context for the current user
-      await supabase.rpc('set_config', {
+      const { error: configError } = await supabase.rpc('set_config', {
         setting_name: 'app.current_user_roll',
         setting_value: rollNumber,
         is_local: true
       });
+
+      if (configError) {
+        console.error('Failed to set RLS context:', configError);
+        return { success: false, error: 'Authentication setup failed' };
+      }
 
       // Check if user exists
       const { data: existingUser, error: userError } = await supabase
         .from('users')
         .select('*')
         .eq('roll_number', rollNumber)
-        .single();
+        .maybeSingle();
 
-      if (userError && userError.code !== 'PGRST116') {
+      if (userError) {
+        console.error('User lookup error:', userError);
         return { success: false, error: 'Database error occurred' };
       }
 
@@ -63,10 +69,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
         // Update name if different
         if (existingUser.name !== name) {
-          await supabase
+          const { error: updateError } = await supabase
             .from('users')
             .update({ name })
             .eq('roll_number', rollNumber);
+
+          if (updateError) {
+            console.error('User update error:', updateError);
+            return { success: false, error: 'Failed to update user information' };
+          }
         }
       } else {
         // Create new user
@@ -79,6 +90,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           });
 
         if (insertError) {
+          console.error('User creation error:', insertError);
           return { success: false, error: 'Failed to register user' };
         }
       }
