@@ -41,17 +41,34 @@ const Index = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { toast } = useToast();
-  const { user } = useAuth();
+  const { user, login, logout, loading: authLoading } = useAuth();
 
 
   useEffect(() => {
-    if (user && gameState === 'login') {
-      // User is already logged in, start the quiz
-      handleLogin(user.rollNumber, user.name);
+    if (user && !authLoading && gameState === 'login') {
+      // User is already logged in, re-validate their participation status
+      handleUserLoginAttempt(user.rollNumber, user.name);
     }
-  }, [user, gameState]);
+  }, [user, authLoading, gameState]);
 
-  const handleLogin = (rollNumber: string, name: string) => {
+  const handleUserLoginAttempt = async (rollNumber: string, name: string) => {
+    const result = await login(rollNumber, name);
+    
+    if (result.success) {
+      initializeQuizSession(rollNumber, name);
+    } else {
+      toast({
+        title: "Login Failed",
+        description: result.error || "Unable to start quiz",
+        variant: "destructive"
+      });
+      // Clear stored user data and stay on login page
+      logout();
+      setGameState('login');
+    }
+  };
+
+  const initializeQuizSession = (rollNumber: string, name: string) => {
     const participantId = `${rollNumber}_${Date.now()}`;
     
     setCurrentParticipant({
@@ -181,7 +198,7 @@ const Index = () => {
   };
 
   if (gameState === 'login') {
-    return <LoginForm onLogin={handleLogin} />;
+    return <LoginForm onLogin={handleUserLoginAttempt} />;
   }
 
   if (gameState === 'playing' && questions.length > 0) {

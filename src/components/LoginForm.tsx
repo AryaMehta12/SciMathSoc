@@ -9,14 +9,14 @@ import { useLeaderboard } from "@/hooks/useLeaderboard";
 import { useToast } from "@/hooks/use-toast";
 
 interface LoginFormProps {
-  onLogin: (rollNumber: string, name: string) => void;
+  onLogin: (rollNumber: string, name: string) => Promise<void>;
 }
 
 export const LoginForm = ({ onLogin }: LoginFormProps) => {
   const [rollNumber, setRollNumber] = useState("");
   const [name, setName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const { login } = useAuth();
+  const { logout } = useAuth();
   const { totalParticipants } = useLeaderboard();
   const { toast } = useToast();
 
@@ -32,20 +32,10 @@ export const LoginForm = ({ onLogin }: LoginFormProps) => {
 
     setIsLoading(true);
     
-    const result = await login(rollNumber.trim(), name.trim());
-    
-    if (result.success) {
-      onLogin(rollNumber.trim(), name.trim());
-      toast({
-        title: "Login Successful!",
-        description: `Welcome ${name}! Your quiz is starting now.`
-      });
-    } else {
-      toast({
-        title: "Login Failed",
-        description: result.error || "An error occurred during login",
-        variant: "destructive"
-      });
+    try {
+      await onLogin(rollNumber.trim(), name.trim());
+    } catch (error) {
+      console.error('Login error:', error);
     }
     
     setIsLoading(false);
