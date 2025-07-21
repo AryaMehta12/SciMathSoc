@@ -38,61 +38,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       setLoading(true);
       
-      // Set RLS context for the current user
-      const { error: configError } = await supabase.rpc('set_config', {
-        setting_name: 'app.current_user_roll',
-        setting_value: rollNumber,
-        is_local: true
+      // Call the centralized user login function
+      const { data, error } = await supabase.rpc('handle_user_login', {
+        p_roll_number: rollNumber,
+        p_name: name
       });
 
-      if (configError) {
-        console.error('Failed to set RLS context:', configError);
-        return { success: false, error: 'Authentication setup failed' };
+      if (error) {
+        console.error('Login RPC error:', error);
+        return { success: false, error: 'Authentication failed' };
       }
 
-      // Check if user exists
-      const { data: existingUser, error: userError } = await supabase
-        .from('users')
-        .select('*')
-        .eq('roll_number', rollNumber)
-        .maybeSingle();
-
-      if (userError) {
-        console.error('User lookup error:', userError);
-        return { success: false, error: 'Database error occurred' };
-      }
-
-      // If user exists, check if they've already participated
-      if (existingUser) {
-        if (existingUser.has_participated) {
+      // Check the response from the function
+      if (!data.success) {
+        if (data.code === 'ALREADY_PARTICIPATED') {
           return { success: false, error: 'You have already participated in this quiz' };
         }
-        // Update name if different
-        if (existingUser.name !== name) {
-          const { error: updateError } = await supabase
-            .from('users')
-            .update({ name })
-            .eq('roll_number', rollNumber);
-
-          if (updateError) {
-            console.error('User update error:', updateError);
-            return { success: false, error: 'Failed to update user information' };
-          }
-        }
-      } else {
-        // Create new user
-        const { error: insertError } = await supabase
-          .from('users')
-          .insert({
-            roll_number: rollNumber,
-            name,
-            has_participated: false
-          });
-
-        if (insertError) {
-          console.error('User creation error:', insertError);
-          return { success: false, error: 'Failed to register user' };
-        }
+        return { success: false, error: data.error || 'Login failed' };
       }
 
       const newUser = { rollNumber, name };
