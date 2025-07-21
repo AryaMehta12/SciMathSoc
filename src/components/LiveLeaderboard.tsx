@@ -3,9 +3,10 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Trophy, Medal, Award, RotateCcw, Home, Clock, Users, Zap } from "lucide-react";
+import { Trophy, Medal, Award, RotateCcw, Home, Users, Zap, Target } from "lucide-react";
 import { useLeaderboard } from "@/hooks/useLeaderboard";
 import { useAuth } from "@/hooks/useAuth";
+import { CountdownTimer } from "@/components/CountdownTimer";
 
 interface Participant {
   id: string;
@@ -22,12 +23,15 @@ interface LiveLeaderboardProps {
   currentParticipant: Participant;
   onPlayAgain?: () => void;
   onGoHome: () => void;
+  quizEndTime?: string; // Format: "HH:MM" (24-hour format)
 }
 
-export const LiveLeaderboard = ({ currentParticipant, onPlayAgain, onGoHome }: LiveLeaderboardProps) => {
+export const LiveLeaderboard = ({ currentParticipant, onPlayAgain, onGoHome, quizEndTime = "23:59" }: LiveLeaderboardProps) => {
   const { leaderboard, totalParticipants, loading } = useLeaderboard();
   const { logout } = useAuth();
-  const [liveStats, setLiveStats] = useState({ timeLeft: "22h 15m" });
+  
+  // Get current top score
+  const currentTopScore = leaderboard.length > 0 ? leaderboard[0].score : 0;
 
   const handleGoHome = () => {
     logout();
@@ -106,13 +110,14 @@ export const LiveLeaderboard = ({ currentParticipant, onPlayAgain, onGoHome }: L
           </div>
 
           <div className="flex justify-center space-x-4">
-            <div className="flex items-center space-x-2 bg-card rounded-full px-4 py-2">
-              <Clock className="w-4 h-4 text-primary" />
-              <span className="text-sm font-medium">{liveStats.timeLeft}</span>
-            </div>
+            <CountdownTimer endTime={quizEndTime} />
             <div className="flex items-center space-x-2 bg-card rounded-full px-4 py-2">
               <Users className="w-4 h-4 text-primary" />
               <span className="text-sm font-medium">{totalParticipants} participants</span>
+            </div>
+            <div className="flex items-center space-x-2 bg-card rounded-full px-4 py-2">
+              <Target className="w-4 h-4 text-primary" />
+              <span className="text-sm font-medium">Top: {currentTopScore.toFixed(1)}</span>
             </div>
           </div>
         </div>
@@ -253,13 +258,24 @@ export const LiveLeaderboard = ({ currentParticipant, onPlayAgain, onGoHome }: L
                 </div>
 
                 {/* Winners Announcement */}
-                {isTopThree && (
+                {currentRank === 1 && (
+                  <div className="mt-6 p-4 bg-gradient-primary/10 border border-primary/20 rounded-lg">
+                    <div className="text-center">
+                      <Trophy className="w-8 h-8 text-primary mx-auto mb-2" />
+                      <h3 className="font-bold text-primary">🎉 WINNER! 🎉</h3>
+                      <p className="text-sm text-muted-foreground">
+                        1st Place: Instagram shoutout + special prize!
+                      </p>
+                    </div>
+                  </div>
+                )}
+                {currentRank >= 2 && currentRank <= 5 && (
                   <div className="mt-6 p-4 bg-gradient-primary/10 border border-primary/20 rounded-lg">
                     <div className="text-center">
                       <Trophy className="w-8 h-8 text-primary mx-auto mb-2" />
                       <h3 className="font-bold text-primary">Congratulations!</h3>
                       <p className="text-sm text-muted-foreground">
-                        You're in the top 3! Check our Instagram for your shoutout.
+                        Top 5: Instagram shoutout coming your way!
                       </p>
                     </div>
                   </div>

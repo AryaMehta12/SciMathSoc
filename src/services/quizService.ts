@@ -23,12 +23,7 @@ export interface LeaderboardEntry {
 export class QuizService {
   static async submitQuizResult(result: QuizResult): Promise<{ success: boolean; error?: string }> {
     try {
-      // Set the app context for RLS
-      await supabase.rpc('set_config', {
-        setting_name: 'app.current_user_roll',
-        setting_value: result.rollNumber,
-        is_local: false
-      });
+      // Note: RLS context will be handled by the backend triggers
 
       // Insert quiz attempt
       const { error: attemptError } = await supabase

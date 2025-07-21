@@ -38,12 +38,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       setLoading(true);
       
-      // Set the app context for RLS
-      await supabase.rpc('set_config', {
-        setting_name: 'app.current_user_roll',
-        setting_value: rollNumber,
-        is_local: false
-      });
+      // Note: RLS context will be handled by the backend triggers
 
       // Check if user exists
       const { data: existingUser, error: userError } = await supabase

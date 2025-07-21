@@ -43,14 +43,6 @@ const Index = () => {
   const { toast } = useToast();
   const { user } = useAuth();
 
-  const shuffleArray = <T,>(array: T[]): T[] => {
-    const shuffled = [...array];
-    for (let i = shuffled.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-    }
-    return shuffled;
-  };
 
   useEffect(() => {
     if (user && gameState === 'login') {
@@ -73,8 +65,7 @@ const Index = () => {
       timestamp: new Date()
     });
 
-    const shuffledQuestions = shuffleArray(sampleQuestions);
-    setQuestions(shuffledQuestions);
+    setQuestions(sampleQuestions);
     setCurrentQuestionIndex(0);
     setCorrectAnswers(0);
     setAnswersData([]);
@@ -211,6 +202,7 @@ const Index = () => {
       <LiveLeaderboard
         currentParticipant={currentParticipant}
         onGoHome={resetToLogin}
+        quizEndTime="23:59"
       />
     );
   }
