@@ -4,27 +4,55 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Brain, Trophy, Users, Clock } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
+import { useLeaderboard } from "@/hooks/useLeaderboard";
+import { useToast } from "@/hooks/use-toast";
 
 interface LoginFormProps {
   onLogin: (rollNumber: string, name: string) => void;
-  competitionTimeLeft?: string;
-  totalParticipants?: number;
 }
 
-export const LoginForm = ({ onLogin, competitionTimeLeft = "23h 45m", totalParticipants = 142 }: LoginFormProps) => {
+export const LoginForm = ({ onLogin }: LoginFormProps) => {
   const [rollNumber, setRollNumber] = useState("");
   const [name, setName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const { login } = useAuth();
+  const { totalParticipants } = useLeaderboard();
+  const { toast } = useToast();
 
   const handleLogin = async () => {
-    if (rollNumber.trim() && name.trim()) {
-      setIsLoading(true);
-      // Simulate API call delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      onLogin(rollNumber.trim(), name.trim());
-      setIsLoading(false);
+    if (!rollNumber.trim() || !name.trim()) {
+      toast({
+        title: "Missing Information",
+        description: "Please enter both roll number and name",
+        variant: "destructive"
+      });
+      return;
     }
+
+    setIsLoading(true);
+    
+    const result = await login(rollNumber.trim(), name.trim());
+    
+    if (result.success) {
+      onLogin(rollNumber.trim(), name.trim());
+      toast({
+        title: "Login Successful!",
+        description: `Welcome ${name}! Your quiz is starting now.`
+      });
+    } else {
+      toast({
+        title: "Login Failed",
+        description: result.error || "An error occurred during login",
+        variant: "destructive"
+      });
+    }
+    
+    setIsLoading(false);
   };
+
+  // Calculate time left (mock data for now)
+  const competitionTimeLeft = "23h 45m";
 
   return (
     <div className="min-h-screen bg-gradient-background flex items-center justify-center p-4 relative overflow-hidden">
@@ -80,7 +108,7 @@ export const LoginForm = ({ onLogin, competitionTimeLeft = "23h 45m", totalParti
                 <span className="text-lg">👥</span>
                 <Users className="w-4 h-4 text-success" />
               </div>
-              <div className="text-lg font-bold text-success">{totalParticipants}</div>
+              <div className="text-lg font-bold text-success">{totalParticipants || 0}</div>
               <div className="text-xs text-muted-foreground">Active Players</div>
             </CardContent>
           </Card>
@@ -111,6 +139,7 @@ export const LoginForm = ({ onLogin, competitionTimeLeft = "23h 45m", totalParti
                 value={rollNumber}
                 onChange={(e) => setRollNumber(e.target.value.toUpperCase())}
                 className="bg-input border-primary/20 text-foreground placeholder:text-muted-foreground focus:ring-primary/20 focus:border-primary py-3 text-lg"
+                disabled={isLoading}
               />
             </div>
             
@@ -125,8 +154,9 @@ export const LoginForm = ({ onLogin, competitionTimeLeft = "23h 45m", totalParti
                 placeholder="Enter your full name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                onKeyPress={(e) => e.key === 'Enter' && handleLogin()}
+                onKeyPress={(e) => e.key === 'Enter' && !isLoading && handleLogin()}
                 className="bg-input border-primary/20 text-foreground placeholder:text-muted-foreground focus:ring-primary/20 focus:border-primary py-3 text-lg"
+                disabled={isLoading}
               />
             </div>
             
@@ -138,7 +168,7 @@ export const LoginForm = ({ onLogin, competitionTimeLeft = "23h 45m", totalParti
               {isLoading ? (
                 <div className="flex items-center space-x-2">
                   <div className="w-5 h-5 border-2 border-current border-t-transparent rounded-full animate-spin"></div>
-                  <span>Initializing Quiz...</span>
+                  <span>Connecting...</span>
                 </div>
               ) : (
                 <div className="flex items-center space-x-2">

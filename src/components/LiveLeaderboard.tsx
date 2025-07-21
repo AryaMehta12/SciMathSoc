@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Trophy, Medal, Award, RotateCcw, Home, Clock, Users, Zap } from "lucide-react";
+import { useLeaderboard } from "@/hooks/useLeaderboard";
+import { useAuth } from "@/hooks/useAuth";
 
 interface Participant {
   id: string;
@@ -12,7 +14,7 @@ interface Participant {
   score: number;
   questionsAnswered: number;
   accuracy: number;
-  completionTime: number; // in seconds
+  completionTime: number;
   timestamp: Date;
 }
 
@@ -22,42 +24,15 @@ interface LiveLeaderboardProps {
   onGoHome: () => void;
 }
 
-// Mock live data - in real app this would come from Supabase real-time subscription
-const mockLeaderboardData: Participant[] = [
-  { id: '1', rollNumber: 'CS001', name: 'Arjun Patel', score: 8.7, questionsAnswered: 15, accuracy: 87, completionTime: 180, timestamp: new Date(Date.now() - 120000) },
-  { id: '2', rollNumber: 'CS045', name: 'Priya Sharma', score: 8.4, questionsAnswered: 15, accuracy: 84, completionTime: 195, timestamp: new Date(Date.now() - 180000) },
-  { id: '3', rollNumber: 'IT032', name: 'Rahul Kumar', score: 8.1, questionsAnswered: 15, accuracy: 81, completionTime: 165, timestamp: new Date(Date.now() - 240000) },
-  { id: '4', rollNumber: 'CS078', name: 'Sneha Gupta', score: 7.8, questionsAnswered: 15, accuracy: 78, completionTime: 220, timestamp: new Date(Date.now() - 300000) },
-  { id: '5', rollNumber: 'IT019', name: 'Vikram Singh', score: 7.5, questionsAnswered: 15, accuracy: 75, completionTime: 210, timestamp: new Date(Date.now() - 360000) },
-];
-
 export const LiveLeaderboard = ({ currentParticipant, onPlayAgain, onGoHome }: LiveLeaderboardProps) => {
-  const [leaderboard, setLeaderboard] = useState<Participant[]>([]);
-  const [liveStats, setLiveStats] = useState({ totalParticipants: 156, timeLeft: "22h 15m" });
+  const { leaderboard, totalParticipants, loading } = useLeaderboard();
+  const { logout } = useAuth();
+  const [liveStats, setLiveStats] = useState({ timeLeft: "22h 15m" });
 
-  useEffect(() => {
-    // Simulate adding current participant to leaderboard
-    const updatedLeaderboard = [...mockLeaderboardData, currentParticipant]
-      .sort((a, b) => {
-        // First sort by score
-        if (b.score !== a.score) return b.score - a.score;
-        // If scores are equal, sort by completion time (faster wins)
-        return a.completionTime - b.completionTime;
-      })
-      .slice(0, 10);
-    
-    setLeaderboard(updatedLeaderboard);
-
-    // Simulate live updates every 10 seconds
-    const interval = setInterval(() => {
-      setLiveStats(prev => ({
-        ...prev,
-        totalParticipants: prev.totalParticipants + Math.floor(Math.random() * 3)
-      }));
-    }, 10000);
-
-    return () => clearInterval(interval);
-  }, [currentParticipant]);
+  const handleGoHome = () => {
+    logout();
+    onGoHome();
+  };
 
   const getRankIcon = (rank: number) => {
     switch (rank) {
@@ -82,8 +57,38 @@ export const LiveLeaderboard = ({ currentParticipant, onPlayAgain, onGoHome }: L
     return "Keep learning! 📚";
   };
 
-  const currentRank = leaderboard.findIndex(p => p.id === currentParticipant.id) + 1;
+  // Find current participant in leaderboard
+  const currentRank = leaderboard.findIndex(p => p.roll_number === currentParticipant.rollNumber) + 1 || 
+                     leaderboard.length + 1;
   const isTopThree = currentRank <= 3;
+
+  // Convert leaderboard data to display format
+  const displayLeaderboard = leaderboard.map((entry, index) => ({
+    id: entry.roll_number,
+    rollNumber: entry.roll_number,
+    name: entry.name,
+    score: entry.score,
+    questionsAnswered: currentParticipant.questionsAnswered, // This should ideally come from the database
+    accuracy: entry.accuracy,
+    completionTime: entry.completion_time,
+    timestamp: new Date()
+  }));
+
+  // Add current participant if not in top 10
+  if (currentRank > 10) {
+    displayLeaderboard.push(currentParticipant);
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-background flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-lg text-foreground">Loading results...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-background p-4">
@@ -107,7 +112,7 @@ export const LiveLeaderboard = ({ currentParticipant, onPlayAgain, onGoHome }: L
             </div>
             <div className="flex items-center space-x-2 bg-card rounded-full px-4 py-2">
               <Users className="w-4 h-4 text-primary" />
-              <span className="text-sm font-medium">{liveStats.totalParticipants} participants</span>
+              <span className="text-sm font-medium">{totalParticipants} participants</span>
             </div>
           </div>
         </div>
@@ -174,7 +179,7 @@ export const LiveLeaderboard = ({ currentParticipant, onPlayAgain, onGoHome }: L
                   )}
                   
                   <Button 
-                    onClick={onGoHome}
+                    onClick={handleGoHome}
                     variant="outline"
                     className="w-full border-border hover:bg-muted"
                   >
@@ -203,11 +208,11 @@ export const LiveLeaderboard = ({ currentParticipant, onPlayAgain, onGoHome }: L
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
-                  {leaderboard.map((participant, index) => (
+                  {displayLeaderboard.slice(0, 10).map((participant, index) => (
                     <div 
                       key={participant.id}
                       className={`flex items-center justify-between p-4 rounded-lg transition-all duration-300 ${
-                        participant.id === currentParticipant.id 
+                        participant.id === currentParticipant.rollNumber 
                           ? 'bg-primary/20 border-2 border-primary/30 shadow-primary' 
                           : 'bg-muted/30 hover:bg-muted/50'
                       } ${index < 3 ? 'winner-card' : ''}`}
@@ -218,10 +223,10 @@ export const LiveLeaderboard = ({ currentParticipant, onPlayAgain, onGoHome }: L
                         </div>
                         <div>
                           <h4 className={`font-semibold ${
-                            participant.id === currentParticipant.id ? 'text-primary' : 'text-foreground'
+                            participant.id === currentParticipant.rollNumber ? 'text-primary' : 'text-foreground'
                           }`}>
                             {participant.name}
-                            {participant.id === currentParticipant.id && (
+                            {participant.id === currentParticipant.rollNumber && (
                               <span className="ml-2 text-xs text-primary">(You)</span>
                             )}
                           </h4>
@@ -237,7 +242,7 @@ export const LiveLeaderboard = ({ currentParticipant, onPlayAgain, onGoHome }: L
                       
                       <div className="text-right">
                         <div className={`text-xl font-bold ${
-                          participant.id === currentParticipant.id ? 'text-primary' : 'text-foreground'
+                          participant.id === currentParticipant.rollNumber ? 'text-primary' : 'text-foreground'
                         }`}>
                           {participant.score.toFixed(1)}
                         </div>
