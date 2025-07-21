@@ -1,4 +1,4 @@
-
+```typescript
 import { useState, useEffect, createContext, useContext, ReactNode } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -17,7 +17,7 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export function AuthProvider({ children }: { children: ReactNode }) {
+export function AuthProvider({ children }: { ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -38,23 +38,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       setLoading(true);
       
-      // Call the centralized user login function
-      const { data, error } = await supabase.rpc('handle_user_login', {
+      // Call the new Supabase RPC function to handle user login/registration
+      const { data, error: rpcError } = await supabase.rpc('handle_user_login', {
         p_roll_number: rollNumber,
         p_name: name
       });
 
-      if (error) {
-        console.error('Login RPC error:', error);
-        return { success: false, error: 'Authentication failed' };
+      if (rpcError) {
+        console.error('Supabase RPC error (handle_user_login):', rpcError);
+        return { success: false, error: rpcError.message || 'Authentication failed due to a database error.' };
       }
 
       // Check the response from the function
-      if (!data.success) {
-        if (data.code === 'ALREADY_PARTICIPATED') {
-          return { success: false, error: 'You have already participated in this quiz' };
+      if (!data || !data.success) {
+        if (data && data.code === 'ALREADY_PARTICIPATED') {
+          return { success: false, error: data.error || 'You have already participated in this quiz.' };
         }
-        return { success: false, error: data.error || 'Login failed' };
+        return { success: false, error: data ? data.error : 'Login failed due to an unknown reason.' };
       }
 
       const newUser = { rollNumber, name };
@@ -89,3 +89,4 @@ export function useAuth() {
   }
   return context;
 }
+```
