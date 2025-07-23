@@ -248,7 +248,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { QuizService } from "@/services/quizService";
 
-type GameState = 'login' | 'playing' | 'results';
+type GameState = "login" | "playing" | "results";
 
 interface Participant {
   id: string;
@@ -262,16 +262,16 @@ interface Participant {
 }
 
 const Index = () => {
-  const [gameState, setGameState] = useState<GameState>('login');
+  const [gameState, setGameState] = useState<GameState>("login");
   const [currentParticipant, setCurrentParticipant] = useState<Participant>({
-    id: '',
-    rollNumber: '',
-    name: '',
+    id: "",
+    rollNumber: "",
+    name: "",
     score: 0,
     questionsAnswered: 0,
     accuracy: 0,
     completionTime: 0,
-    timestamp: new Date()
+    timestamp: new Date(),
   });
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [questions, setQuestions] = useState<Question[]>([]);
@@ -284,12 +284,15 @@ const Index = () => {
   const { user, login, logout, loading: authLoading } = useAuth();
 
   useEffect(() => {
-    if (user && !authLoading && gameState === 'login') {
+    if (user && !authLoading && gameState === "login") {
       handleUserLoginAttempt(user.rollNumber, user.name);
     }
   }, [user, authLoading, gameState]);
 
-  const handleUserLoginAttempt = async (rollNumber: string, name: string) => {
+  const handleUserLoginAttempt = async (
+    rollNumber: string,
+    name: string
+  ) => {
     const result = await login(rollNumber, name);
 
     if (result.success) {
@@ -298,10 +301,10 @@ const Index = () => {
       toast({
         title: "Login Failed",
         description: result.error || "Unable to start quiz",
-        variant: "destructive"
+        variant: "destructive",
       });
       logout();
-      setGameState('login');
+      setGameState("login");
     }
   };
 
@@ -316,7 +319,7 @@ const Index = () => {
       questionsAnswered: 0,
       accuracy: 0,
       completionTime: 0,
-      timestamp: new Date()
+      timestamp: new Date(),
     });
 
     setQuestions(sampleQuestions);
@@ -324,11 +327,11 @@ const Index = () => {
     setCorrectAnswers(0);
     setAnswersData([]);
     setStartTime(new Date());
-    setGameState('playing');
+    setGameState("playing");
 
     toast({
       title: "Quiz Started!",
-      description: `Good luck, ${name}! Make it count - you only get one shot! 🚀`
+      description: `Good luck, ${name}! 🚀`,
     });
   };
 
@@ -344,54 +347,49 @@ const Index = () => {
       userAnswer: answer,
       correctAnswer: questions[currentQuestionIndex].correctAnswer,
       isCorrect,
-      timeStamp: new Date()
+      timeStamp: new Date(),
     };
 
-    setAnswersData(prev => [...prev, answerRecord]);
+    setAnswersData((prev) => [...prev, answerRecord]);
+
+    const updatedParticipant = {
+      ...currentParticipant,
+      score: Math.max(0, newScore),
+      questionsAnswered: newQuestionsAnswered,
+      accuracy: newAccuracy,
+    };
+
+    setCurrentParticipant(updatedParticipant);
     setCorrectAnswers(newCorrectAnswers);
 
     if (currentQuestionIndex < questions.length - 1) {
-      // Not last question — just update state and move on
-      setCurrentParticipant(prev => ({
-        ...prev,
-        score: Math.max(0, newScore),
-        questionsAnswered: newQuestionsAnswered,
-        accuracy: newAccuracy
-      }));
       setTimeout(() => {
-        setCurrentQuestionIndex(currentQuestionIndex + 1);
+        setCurrentQuestionIndex((prev) => prev + 1);
       }, 500);
     } else {
-      // Last question — pass updated participant to finishQuiz
-      const finalParticipant = {
-        ...currentParticipant,
-        score: Math.max(0, newScore),
-        questionsAnswered: newQuestionsAnswered,
-        accuracy: newAccuracy,
-        timestamp: new Date()
-      };
-      setCurrentParticipant(finalParticipant);
       setTimeout(() => {
-        finishQuiz(finalParticipant);
+        finishQuiz(updatedParticipant); // use updated participant
       }, 500);
     }
   };
 
-  const finishQuiz = async (finalParticipantParam?: Participant) => {
+  const finishQuiz = async (finalData?: Participant) => {
     if (isSubmitting) return;
 
     setIsSubmitting(true);
     const endTime = new Date();
-    const completionTime = Math.floor((endTime.getTime() - startTime.getTime()) / 1000);
+    const rawTime = Math.floor((endTime.getTime() - startTime.getTime()) / 1000);
+    const completionTime = Math.max(1, rawTime); // avoid 0s
 
-    const finalParticipant = finalParticipantParam ?? {
-      ...currentParticipant,
-      score: Math.max(0, currentParticipant.score),
-      accuracy: currentParticipant.questionsAnswered > 0
-        ? (correctAnswers / currentParticipant.questionsAnswered) * 100
-        : 0,
+    const finalParticipant = {
+      ...(finalData || currentParticipant),
+      score: Math.max(0, (finalData || currentParticipant).score),
+      accuracy:
+        (finalData || currentParticipant).questionsAnswered > 0
+          ? (correctAnswers / (finalData || currentParticipant).questionsAnswered) * 100
+          : 0,
       completionTime,
-      timestamp: endTime
+      timestamp: endTime,
     };
 
     const result = await QuizService.submitQuizResult({
@@ -401,51 +399,53 @@ const Index = () => {
       accuracy: finalParticipant.accuracy,
       completionTime: finalParticipant.completionTime,
       questionsAnswered: finalParticipant.questionsAnswered,
-      answersData
+      answersData,
     });
 
     if (result.success) {
       setCurrentParticipant(finalParticipant);
-      setGameState('results');
+      setGameState("results");
       toast({
         title: "Quiz Complete!",
-        description: `Final score: ${finalParticipant.score.toFixed(1)} points in ${Math.floor(completionTime / 60)}m ${completionTime % 60}s`
+        description: `Final score: ${finalParticipant.score.toFixed(
+          1
+        )} points in ${Math.floor(completionTime / 60)}m ${completionTime % 60}s`,
       });
     } else {
       toast({
         title: "Submission Error",
         description: result.error || "Failed to submit quiz results. Please try again.",
-        variant: "destructive"
+        variant: "destructive",
       });
-      setTimeout(() => finishQuiz(finalParticipant), 2000);
+      setTimeout(() => finishQuiz(finalData), 2000);
     }
 
     setIsSubmitting(false);
   };
 
   const resetToLogin = () => {
-    setGameState('login');
+    setGameState("login");
     setCurrentQuestionIndex(0);
     setQuestions([]);
     setCorrectAnswers(0);
     setAnswersData([]);
     setCurrentParticipant({
-      id: '',
-      rollNumber: '',
-      name: '',
+      id: "",
+      rollNumber: "",
+      name: "",
       score: 0,
       questionsAnswered: 0,
       accuracy: 0,
       completionTime: 0,
-      timestamp: new Date()
+      timestamp: new Date(),
     });
   };
 
-  if (gameState === 'login') {
+  if (gameState === "login") {
     return <LoginForm onLogin={handleUserLoginAttempt} />;
   }
 
-  if (gameState === 'playing' && questions.length > 0) {
+  if (gameState === "playing" && questions.length > 0) {
     return (
       <QuizCard
         question={questions[currentQuestionIndex]}
@@ -458,7 +458,7 @@ const Index = () => {
     );
   }
 
-  if (gameState === 'results') {
+  if (gameState === "results") {
     return (
       <LiveLeaderboard
         currentParticipant={currentParticipant}
