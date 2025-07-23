@@ -8,33 +8,35 @@ export const sampleQuestions: Question[] = [
     options: ['1', '0.5', '0.25', '0.75'],
     correctAnswer: '0.75',
     subject: 'math',
+    difficulty: 'medium'
+  },
+  {
+    id: 2,
+    type: 'multiple-choice',
+    question: 'You choose 3 unknown natural numbers x, y, z. I can ask you two expressions of the form a·x + b·y + c·z, where I choose integers a, b, c. \n Can I always determine x, y, z using just these two responses?',
+    options: ['yes','no'],
+    correctAnswer: 'yes',
+    subject: 'math',
+    difficulty: 'hard'
+  },
+  {
+    id: 3,
+    type: 'multiple-choice',
+    question: 'On a distant island, there are three kinds of chameleons: 13 are red, 15 are green, and 17 are blue. When two chameleons of different colors encounter each other, they change their color to the third color. For instance, if a green chameleon and a red chameleon meet, they both become blue. Can all the chameleons ever be the same color?',
+    options: ['yes','no'],
+    correctAnswer: 'no',
+    subject: 'math',
     difficulty: 'easy'
   },
-  // {
-  //   id: 2,
-  //   type: 'text-input',
-  //   question: 'Q2 - Question 2',
-  //   correctAnswer: '1',
-  //   subject: 'math',
-  //   difficulty: 'easy'
-  // },
-  // {
-  //   id: 3,
-  //   type: 'multiple-choice',
-  //   question: 'Q3 - Question 3',
-  //   options: ['1', '2', '3', '4'],
-  //   correctAnswer: '1',
-  //   subject: 'math',
-  //   difficulty: 'medium'
-  // },
-  // {
-  //   id: 4,
-  //   type: 'text-input',
-  //   question: 'Q4 - Question 4',
-  //   correctAnswer: '1',
-  //   subject: 'math',
-  //   difficulty: 'easy'
-  // },
+  {
+    id: 4,
+    type: 'multiple-choice',
+    question: 'You are allowed to measure the total mass and the center of mass position of a sealed box. Inside, there are three point masses placed at unknown positions along a straight line.  \nCan you always determine the exact positions of all three masses from just these two measurements? ',
+    options: ['yes','no'],
+    correctAnswer: 'no',
+    subject: 'phy',
+    difficulty: 'easy'
+  },
   // {
   //   id: 5,
   //   type: 'multiple-choice',
