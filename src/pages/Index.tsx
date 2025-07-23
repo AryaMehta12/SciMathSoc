@@ -143,7 +143,7 @@ const Index = () => {
     const finalParticipant = {
       ...currentParticipant,
       score: Math.max(0, currentParticipant.score),
-      accuracy: (correctAnswers / currentParticipant.questionsAnswered) * 100,
+      accuracy: currentParticipant.questionsAnswered > 0 ? (correctAnswers / currentParticipant.questionsAnswered) * 100 : 0,
       completionTime,
       timestamp: endTime
     };
