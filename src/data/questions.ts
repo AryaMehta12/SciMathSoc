@@ -7,7 +7,7 @@ export const sampleQuestions: Question[] = [
     question: 'Q1 - Question 1',
     options: ['1', '2', '3', '4'],
     correctAnswer: '1',
-    subject: 'math',
+    subject: 'ma',
     difficulty: 'easy'
   },
   // {
