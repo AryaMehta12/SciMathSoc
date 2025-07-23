@@ -69,7 +69,7 @@ export const LoginForm = ({ onLogin }: LoginFormProps) => {
           </h1>
           
           <p className="text-lg text-muted-foreground">
-            Science & Mathematics Society Challenge
+            Science & Mathematics Society IITK
           </p>
           
           <div className="flex items-center justify-center space-x-4 text-sm text-muted-foreground">
@@ -85,7 +85,7 @@ export const LoginForm = ({ onLogin }: LoginFormProps) => {
           <Card className="bg-gradient-card border-primary/20 shadow-card backdrop-blur-sm">
             <CardContent className="p-4 text-center">
               <div className="flex items-center justify-center space-x-1 mb-2">
-                <span className="text-lg">⏱️</span>
+                <span className="text-lg"></span>
                 <Clock className="w-4 h-4 text-primary" />
               </div>
               <div className="text-lg font-bold text-primary">{competitionTimeLeft}</div>
@@ -96,7 +96,7 @@ export const LoginForm = ({ onLogin }: LoginFormProps) => {
           <Card className="bg-gradient-card border-primary/20 shadow-card backdrop-blur-sm">
             <CardContent className="p-4 text-center">
               <div className="flex items-center justify-center space-x-1 mb-2">
-                <span className="text-lg">👥</span>
+                <span className="text-lg"></span>
                 <Users className="w-4 h-4 text-success" />
               </div>
               <div className="text-lg font-bold text-success">{totalParticipants || 0}</div>
