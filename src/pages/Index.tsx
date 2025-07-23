@@ -289,6 +289,16 @@ const Index = () => {
   }, [user, authLoading, gameState]);
 
   const handleUserLoginAttempt = async (rollNumber: string, name: string) => {
+      const roll = Number(rollNumber);
+      if (isNaN(roll) || roll < 250000 || roll > 251400) {
+        toast({
+          title: "Invalid Roll Number",
+          description: "Enter your IITK roll number.",
+          variant: "destructive",
+        });
+        return;
+      }
+    
     const result = await login(rollNumber, name);
 
     if (result.success) {
