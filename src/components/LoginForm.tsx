@@ -275,7 +275,12 @@ export const LoginForm = ({ onLogin }) => {
   };
 
   // Example validation logic (adjust as needed)
-  const validateRoll = (val) => /^([0-9]{2}[A-Za-z]{2,3}[0-9]{3})$/.test(val);
+  const validateRoll = (val) => {
+  if (!/^25\d{4}$/.test(val)) return false; // must start with 25 and have 4 digits
+  const num = parseInt(val.slice(2), 10);   // extract the 4-digit number
+  return num >= 0 && num <= 1350;
+};
+
   const validateName = (val) => val.length > 1 && /[a-zA-Z ]/.test(val);
 
   // Validate on change
