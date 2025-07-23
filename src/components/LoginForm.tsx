@@ -58,8 +58,13 @@ export const LoginForm = ({ onLogin }: LoginFormProps) => {
           <div className="flex items-center justify-center space-x-3 mb-6">
             <div className="w-20 h-20 bg-gradient-primary rounded-full flex items-center justify-center shadow-glow">
               <div className="flex items-center space-x-1">
-                <span className="text-2xl">🧪</span>
-                <span className="text-2xl">📐</span>
+                <img
+                  src="/smslogo.png"
+                  alt="🧪 📐"
+                  className="w-12 h-12 object-contain"
+                />
+                {/* <span className="text-2xl">🧪</span>
+                <span className="text-2xl">📐</span> */}
               </div>
             </div>
           </div>
