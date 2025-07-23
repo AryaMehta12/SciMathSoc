@@ -150,6 +150,18 @@ export class QuizService {
     try {
       const rollNumber = result.rollNumber.toUpperCase();
 
+      // Set RLS context for the current user
+      const { error: contextError } = await supabase.rpc('set_config', {
+        setting_name: 'app.current_user_roll',
+        new_value: rollNumber,
+        is_local: true
+      });
+
+      if (contextError) {
+        console.error('Context setting error:', contextError);
+        return { success: false, error: 'Failed to set user context' };
+      }
+
       // Step 1: Check if user exists
       const { data: user, error: userFetchError } = await supabase
         .from('users')
@@ -172,7 +184,7 @@ export class QuizService {
 
         if (insertUserError) {
           console.error('User insert error:', insertUserError);
-          return { success: false, error: 'Failed to create user (check RLS)' };
+          return { success: false, error: 'Failed to create user' };
         }
       }
 
