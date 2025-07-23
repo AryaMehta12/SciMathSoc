@@ -20,7 +20,7 @@ export interface LeaderboardEntry {
   rank: number;
 }
 
-export class QuizService {
+class QuizService {
   static async submitQuizResult(result: QuizResult): Promise<{ success: boolean; error?: string }> {
     try {
       // Note: RLS context will be handled by the backend triggers
