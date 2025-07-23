@@ -131,6 +131,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      handle_user_login: {
+        Args: { p_roll_number: string; p_name: string }
+        Returns: Json
+      }
       set_config: {
         Args: {
           setting_name: string
