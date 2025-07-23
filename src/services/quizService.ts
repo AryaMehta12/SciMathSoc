@@ -151,18 +151,18 @@ export class QuizService {
       const rollNumber = result.rollNumber.toUpperCase();
 
       // Step 1: Check if user exists
-      const { data: user, error: userCheckError } = await supabase
+      const { data: user, error: userFetchError } = await supabase
         .from('users')
         .select('roll_number')
         .eq('roll_number', rollNumber)
         .maybeSingle();
 
-      if (userCheckError) {
-        console.error('User check error:', userCheckError);
-        return { success: false, error: 'Could not check user' };
+      if (userFetchError) {
+        console.error('User fetch error:', userFetchError);
+        return { success: false, error: 'Failed to verify user' };
       }
 
-      // Step 2: If user doesn't exist, create it
+      // Step 2: If user doesn't exist, insert them (requires relaxed RLS policy!)
       if (!user) {
         const { error: insertUserError } = await supabase.from('users').insert({
           roll_number: rollNumber,
@@ -172,7 +172,7 @@ export class QuizService {
 
         if (insertUserError) {
           console.error('User insert error:', insertUserError);
-          return { success: false, error: 'Failed to create user' };
+          return { success: false, error: 'Failed to create user (check RLS)' };
         }
       }
 
@@ -191,8 +191,8 @@ export class QuizService {
         return { success: false, error: 'Failed to save quiz results' };
       }
 
-      // Step 4: Update user participation
-      const { error: userUpdateError } = await supabase
+      // Step 4: Update user participation status
+      const { error: updateUserError } = await supabase
         .from('users')
         .update({
           has_participated: true,
@@ -200,15 +200,15 @@ export class QuizService {
         })
         .eq('roll_number', rollNumber);
 
-      if (userUpdateError) {
-        console.error('User update error:', userUpdateError);
-        return { success: false, error: 'Failed to update user status' };
+      if (updateUserError) {
+        console.error('User update error:', updateUserError);
+        return { success: false, error: 'Failed to update participation status' };
       }
 
       return { success: true };
     } catch (error) {
       console.error('Submit quiz error:', error);
-      return { success: false, error: 'Unexpected error' };
+      return { success: false, error: 'An unexpected error occurred' };
     }
   }
 
@@ -221,14 +221,14 @@ export class QuizService {
         .limit(10);
 
       if (error) {
-        console.error('Leaderboard fetch error:', error);
-        return { data: [], error: 'Could not load leaderboard' };
+        console.error('Leaderboard error:', error);
+        return { data: [], error: 'Failed to fetch leaderboard' };
       }
 
       return { data: data || [] };
     } catch (error) {
       console.error('Get leaderboard error:', error);
-      return { data: [], error: 'Unexpected error' };
+      return { data: [], error: 'An unexpected error occurred' };
     }
   }
 
