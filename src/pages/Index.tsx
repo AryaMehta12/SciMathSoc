@@ -122,14 +122,25 @@ const Index = () => {
 
     setCorrectAnswers(newCorrectAnswers);
 
-    if (currentQuestionIndex < questions.length ) {
+    if (currentQuestionIndex < questions.length-1 ) {
       setTimeout(() => {
         setCurrentQuestionIndex(currentQuestionIndex + 1);
       }, 500);
     } else {
-      setTimeout(() => {
-        finishQuiz();
-      }, 500);
+      setCurrentParticipant(prev => {
+      const updated = {
+        ...prev,
+        score: Math.max(0, newScore),
+        questionsAnswered: newQuestionsAnswered,
+        accuracy: newAccuracy
+      };
+      finishQuiz(updated);  // pass updated participant to finishQuiz
+      return updated;
+    });
+  }, 500);
+      // setTimeout(() => {
+      //   finishQuiz();
+      // }, 500);
     }
   };
 
