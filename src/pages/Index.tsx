@@ -275,7 +275,6 @@ const Index = () => {
   });
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [questions, setQuestions] = useState<Question[]>([]);
-  const [correctAnswers, setCorrectAnswers] = useState(0);
   const [startTime, setStartTime] = useState<Date>(new Date());
   const [answersData, setAnswersData] = useState<any[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -289,10 +288,7 @@ const Index = () => {
     }
   }, [user, authLoading, gameState]);
 
-  const handleUserLoginAttempt = async (
-    rollNumber: string,
-    name: string
-  ) => {
+  const handleUserLoginAttempt = async (rollNumber: string, name: string) => {
     const result = await login(rollNumber, name);
 
     if (result.success) {
@@ -324,7 +320,6 @@ const Index = () => {
 
     setQuestions(sampleQuestions);
     setCurrentQuestionIndex(0);
-    setCorrectAnswers(0);
     setAnswersData([]);
     setStartTime(new Date());
     setGameState("playing");
@@ -338,8 +333,6 @@ const Index = () => {
   const handleAnswer = (answer: string, isCorrect: boolean) => {
     const newScore = currentParticipant.score + (isCorrect ? 1 : -0.3);
     const newQuestionsAnswered = currentParticipant.questionsAnswered + 1;
-    const newCorrectAnswers = correctAnswers + (isCorrect ? 1 : 0);
-    const newAccuracy = (newCorrectAnswers / newQuestionsAnswered) * 100;
 
     const answerRecord = {
       questionId: questions[currentQuestionIndex].id,
@@ -350,17 +343,16 @@ const Index = () => {
       timeStamp: new Date(),
     };
 
-    setAnswersData((prev) => [...prev, answerRecord]);
+    const updatedAnswers = [...answersData, answerRecord];
+    setAnswersData(updatedAnswers);
 
     const updatedParticipant = {
       ...currentParticipant,
       score: Math.max(0, newScore),
       questionsAnswered: newQuestionsAnswered,
-      accuracy: newAccuracy,
     };
 
     setCurrentParticipant(updatedParticipant);
-    setCorrectAnswers(newCorrectAnswers);
 
     if (currentQuestionIndex < questions.length - 1) {
       setTimeout(() => {
@@ -368,26 +360,26 @@ const Index = () => {
       }, 500);
     } else {
       setTimeout(() => {
-        finishQuiz(updatedParticipant); // use updated participant
+        finishQuiz(updatedParticipant, updatedAnswers); // use final state
       }, 500);
     }
   };
 
-  const finishQuiz = async (finalData?: Participant) => {
+  const finishQuiz = async (finalData: Participant, finalAnswers: any[]) => {
     if (isSubmitting) return;
-
     setIsSubmitting(true);
+
     const endTime = new Date();
     const rawTime = Math.floor((endTime.getTime() - startTime.getTime()) / 1000);
-    const completionTime = Math.max(1, rawTime); // avoid 0s
+    const completionTime = Math.max(1, rawTime); // ensure non-zero time
+
+    // Recalculate accuracy directly from answer data
+    const totalCorrect = finalAnswers.filter((a) => a.isCorrect).length;
+    const accuracy = finalAnswers.length > 0 ? (totalCorrect / finalAnswers.length) * 100 : 0;
 
     const finalParticipant = {
-      ...(finalData || currentParticipant),
-      score: Math.max(0, (finalData || currentParticipant).score),
-      accuracy:
-        (finalData || currentParticipant).questionsAnswered > 0
-          ? (correctAnswers / (finalData || currentParticipant).questionsAnswered) * 100
-          : 0,
+      ...finalData,
+      accuracy,
       completionTime,
       timestamp: endTime,
     };
@@ -398,8 +390,8 @@ const Index = () => {
       score: finalParticipant.score,
       accuracy: finalParticipant.accuracy,
       completionTime: finalParticipant.completionTime,
-      questionsAnswered: finalParticipant.questionsAnswered,
-      answersData,
+      questionsAnswered: finalAnswers.length,
+      answersData: finalAnswers,
     });
 
     if (result.success) {
@@ -417,7 +409,7 @@ const Index = () => {
         description: result.error || "Failed to submit quiz results. Please try again.",
         variant: "destructive",
       });
-      setTimeout(() => finishQuiz(finalData), 2000);
+      setTimeout(() => finishQuiz(finalData, finalAnswers), 2000);
     }
 
     setIsSubmitting(false);
@@ -427,7 +419,6 @@ const Index = () => {
     setGameState("login");
     setCurrentQuestionIndex(0);
     setQuestions([]);
-    setCorrectAnswers(0);
     setAnswersData([]);
     setCurrentParticipant({
       id: "",
@@ -483,3 +474,4 @@ const Index = () => {
 };
 
 export default Index;
+
