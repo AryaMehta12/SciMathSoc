@@ -65,11 +65,11 @@ export const LoginForm = ({ onLogin }: LoginFormProps) => {
           </div>
           
           <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-primary-light bg-clip-text text-transparent">
-            SciMathSoc Quiz
+            SciMathSoc  
           </h1>
           
           <p className="text-lg text-muted-foreground">
-            Science & Mathematics Society IITK
+            Bold Minds. Sharp Ideas. One Society.
           </p>
           
           <div className="flex items-center justify-center space-x-4 text-sm text-muted-foreground">
@@ -170,8 +170,9 @@ export const LoginForm = ({ onLogin }: LoginFormProps) => {
             </Button>
 
             <div className="text-center pt-2">
+              
               <p className="text-xs text-muted-foreground">
-                One attempt per participant • Real-time leaderboard updates
+              Bold Minds. Sharp Ideas. One Society.
               </p>
             </div>
           </CardContent>
@@ -187,21 +188,18 @@ export const LoginForm = ({ onLogin }: LoginFormProps) => {
             <div className="space-y-2 text-sm">
               <div className="flex items-center space-x-3 p-2 rounded-lg bg-gradient-to-r from-winner-gold/10 to-transparent">
                 <span className="text-winner-gold text-lg">🥇</span>
-                <span className="text-foreground font-medium">Champion: Certificate + Special Prize</span>
+                <span className="text-foreground font-medium">Winner: Insta Shoutout + Special Prize</span>
               </div>
               <div className="flex items-center space-x-3 p-2 rounded-lg bg-gradient-to-r from-winner-silver/10 to-transparent">
-                <span className="text-winner-silver text-lg">🥈</span>
-                <span className="text-foreground font-medium">Runner-up: Certificate of Excellence</span>
+                <span className="text-winner-silver text-lg">2-5</span>
+                <span className="text-foreground font-medium">Runner-up: Insta Shoutout</span>
               </div>
-              <div className="flex items-center space-x-3 p-2 rounded-lg bg-gradient-to-r from-winner-bronze/10 to-transparent">
-                <span className="text-winner-bronze text-lg">🥉</span>
-                <span className="text-foreground font-medium">3rd Place: Certificate of Merit</span>
-              </div>
+              
             </div>
             <div className="mt-4 pt-3 border-t border-primary/20 text-center">
-              <p className="text-xs text-muted-foreground">
-                🎯 10 Questions • ⚡ Speed Scoring • 📈 Live Rankings
-              </p>
+               <p className="text-xs text-muted-foreground">
+                🎯 8 Questions • ⚡ Speed Scoring • 📈 Live Rankings
+              </p> 
             </div>
           </CardContent>
         </Card>
