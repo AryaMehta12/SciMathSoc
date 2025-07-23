@@ -268,7 +268,7 @@ export class QuizService {
       )
       .subscribe();
 
-    return () => {
+    return  () => {
       supabase.removeChannel(channel);
     };
   }
