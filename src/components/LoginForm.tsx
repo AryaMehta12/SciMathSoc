@@ -7,6 +7,7 @@ import { Brain, Trophy, Users, Clock } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useLeaderboard } from "@/hooks/useLeaderboard";
 import { useToast } from "@/hooks/use-toast";
+import TillEndDate from "@/components/TillEndDate"
 
 interface LoginFormProps {
   onLogin: (rollNumber: string, name: string) => Promise<void>;
@@ -42,7 +43,7 @@ export const LoginForm = ({ onLogin }: LoginFormProps) => {
   };
 
   // Calculate time left (mock data for now)
-  const competitionTimeLeft = "23h 45m";
+  const competitionTimeLeft = <TillEndDate />;
 
   return (
     <div className="min-h-screen bg-gradient-background flex items-center justify-center p-4 relative overflow-hidden">
