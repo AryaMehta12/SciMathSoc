@@ -122,7 +122,7 @@ const Index = () => {
 
     setCorrectAnswers(newCorrectAnswers);
 
-    if (currentQuestionIndex < questions.length - 1) {
+    if (currentQuestionIndex < questions.length ) {
       setTimeout(() => {
         setCurrentQuestionIndex(currentQuestionIndex + 1);
       }, 500);
