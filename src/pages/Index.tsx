@@ -122,26 +122,32 @@ const Index = () => {
 
     setCorrectAnswers(newCorrectAnswers);
 
-    if (currentQuestionIndex < questions.length-1 ) {
-      setTimeout(() => {
-        setCurrentQuestionIndex(currentQuestionIndex + 1);
-      }, 500);
-    } else {
-      setCurrentParticipant(prev => {
-      const updated = {
-        ...prev,
-        score: Math.max(0, newScore),
-        questionsAnswered: newQuestionsAnswered,
-        accuracy: newAccuracy
-      };
-      finishQuiz(updated);  // pass updated participant to finishQuiz
-      return updated;
-    });
+    // if (currentQuestionIndex < questions.length-1 ) {
+    //   setTimeout(() => {
+    //     setCurrentQuestionIndex(currentQuestionIndex + 1);
+    //   }, 500);
+    // } else {
+    //   setTimeout(() => {
+    //     finishQuiz();
+    //   }, 500);
+    // }
+    if (currentQuestionIndex < questions.length - 1) {
+        setTimeout(() => {
+    setCurrentQuestionIndex(currentQuestionIndex + 1);
   }, 500);
-      // setTimeout(() => {
-      //   finishQuiz();
-      // }, 500);
-    }
+} else {
+  // Final question — make sure latest score/accuracy is passed
+  setTimeout(() => {
+    const updatedParticipant = {
+      ...currentParticipant,
+      score: Math.max(0, newScore),
+      questionsAnswered: newQuestionsAnswered,
+      accuracy: newAccuracy
+    };
+    setCurrentParticipant(updatedParticipant); // still update state
+    finishQuiz(updatedParticipant); // pass updated data to finishQuiz
+  }, 500);
+}
   };
 
   const finishQuiz = async () => {
