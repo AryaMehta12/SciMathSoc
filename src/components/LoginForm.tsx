@@ -61,7 +61,7 @@ export const LoginForm = ({ onLogin }: LoginFormProps) => {
                 <img
                   src="/smslogo.png"
                   alt="🧪 📐"
-                  className="w-12 h-12 object-contain"
+                  className="w-30 h-30 object-contain"
                 />
                 {/* <span className="text-2xl">🧪</span>
                 <span className="text-2xl">📐</span> */}
