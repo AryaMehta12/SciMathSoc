@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
-// Set your target end time (e.g., 23 hours from now)
-const END_TIME = new Date().getTime() + 23 * 60 * 60 * 1000;
+// Set contest end date: 25th July, 12:00 AM (UTC)
+const END_TIME = new Date("2025-07-25T00:00:00Z").getTime();
 
 const CountdownTimer = () => {
   const [timeLeft, setTimeLeft] = useState(END_TIME - Date.now());
@@ -10,18 +10,17 @@ const CountdownTimer = () => {
     const interval = setInterval(() => {
       setTimeLeft(END_TIME - Date.now());
     }, 1000);
-
     return () => clearInterval(interval);
   }, []);
 
-  // Calculate hours, minutes, seconds
-  const hours = Math.floor(timeLeft / (1000 * 60 * 60));
-  const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-  const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+  // Calculate hours and minutes left
+  const totalMinutes = Math.max(0, Math.floor(timeLeft / (1000 * 60)));
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
 
   return (
     <div>
-      {hours}h {minutes}m {seconds}s
+      {hours}h {minutes}m
     </div>
   );
 };
