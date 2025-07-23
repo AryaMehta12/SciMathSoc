@@ -16,20 +16,13 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export function AuthProvider({ children }: { ReactNode }) {
+export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Check if user is already logged in from localStorage
-    const savedUser = localStorage.getItem('quiz_user');
-    if (savedUser) {
-      try {
-        setUser(JSON.parse(savedUser));
-      } catch (error) {
-        localStorage.removeItem('quiz_user');
-      }
-    }
+    // Clear any existing user session on app start to require explicit login
+    localStorage.removeItem('quiz_user');
     setLoading(false);
   }, []);
 
@@ -49,11 +42,12 @@ export function AuthProvider({ children }: { ReactNode }) {
       }
 
       // Check the response from the function
-      if (!data || !data.success) {
-        if (data && data.code === 'ALREADY_PARTICIPATED') {
-          return { success: false, error: data.error || 'You have already participated in this quiz.' };
+      const result = data as any;
+      if (!result || !result.success) {
+        if (result && result.code === 'ALREADY_PARTICIPATED') {
+          return { success: false, error: result.error || 'You have already participated in this quiz.' };
         }
-        return { success: false, error: data ? data.error : 'Login failed due to an unknown reason.' };
+        return { success: false, error: result ? result.error : 'Login failed due to an unknown reason.' };
       }
 
       const newUser = { rollNumber, name };
