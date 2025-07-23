@@ -187,3 +187,89 @@ export class QuizService {
       });
 
       if (attemptError) {
+        console.error('Quiz attempt error:', attemptError);
+        return { success: false, error: 'Failed to save quiz results' };
+      }
+
+      // Step 4: Update user participation
+      const { error: userUpdateError } = await supabase
+        .from('users')
+        .update({
+          has_participated: true,
+          last_participation_date: new Date().toISOString().split('T')[0]
+        })
+        .eq('roll_number', rollNumber);
+
+      if (userUpdateError) {
+        console.error('User update error:', userUpdateError);
+        return { success: false, error: 'Failed to update user status' };
+      }
+
+      return { success: true };
+    } catch (error) {
+      console.error('Submit quiz error:', error);
+      return { success: false, error: 'Unexpected error' };
+    }
+  }
+
+  static async getLeaderboard(): Promise<{ data: LeaderboardEntry[]; error?: string }> {
+    try {
+      const { data, error } = await supabase
+        .from('leaderboard_cache')
+        .select('*')
+        .order('rank', { ascending: true })
+        .limit(10);
+
+      if (error) {
+        console.error('Leaderboard fetch error:', error);
+        return { data: [], error: 'Could not load leaderboard' };
+      }
+
+      return { data: data || [] };
+    } catch (error) {
+      console.error('Get leaderboard error:', error);
+      return { data: [], error: 'Unexpected error' };
+    }
+  }
+
+  static async getTotalParticipants(): Promise<number> {
+    try {
+      const { count, error } = await supabase
+        .from('users')
+        .select('*', { count: 'exact', head: true })
+        .eq('has_participated', true);
+
+      if (error) {
+        console.error('Participants count error:', error);
+        return 0;
+      }
+
+      return count || 0;
+    } catch (error) {
+      console.error('Get participants error:', error);
+      return 0;
+    }
+  }
+
+  static subscribeToLeaderboard(callback: (data: LeaderboardEntry[]) => void) {
+    const channel = supabase
+      .channel('leaderboard-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'leaderboard_cache'
+        },
+        async () => {
+          const { data } = await this.getLeaderboard();
+          callback(data);
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }
+}
