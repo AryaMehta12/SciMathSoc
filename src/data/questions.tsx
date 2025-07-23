@@ -40,11 +40,11 @@ export const sampleQuestions: Question[] = [
   {
   id: 5,
   type: 'multiple-choice',
-  question: `<img src="/images/probability-axiom-question.jpg" alt="Probability Axiom Question" style="max-width:100%" />`,
+  question: `<img src="/images/probability-axiom-question.png" alt="Probability Axiom Question" style="max-width:100%" />`,
   options: [
     '1','2','3','4'
   ],
-  correctAnswer:  `2`,
+  correctAnswer:  `4`,
   subject: 'math',
   difficulty: 'medium'
 }
