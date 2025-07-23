@@ -40,17 +40,11 @@ export const sampleQuestions: Question[] = [
   {
   id: 5,
   type: 'multiple-choice',
-  question: `Which of the following is <b>not</b> a property of the <b>axiomatic probability function</b>?`,
+  question: `<img src="/images/probability-axiom-question.jpg" alt="Probability Axiom Question" style="max-width:100%" />`,
   options: [
-    `1. \\( \\mathbb{P}(\\Omega) = 1 \\)`,
-    `2. Suppose \\( A, B \\in \\mathcal{F} \\) where \\( \\mathcal{F} \\) is the sample space, if \\( A \\subseteq B \\), then
-    \\[ \\mathbb{P}(B) = \\mathbb{P}(A) + \\mathbb{P}(A \\cup B^c) \\]`,
-    `3. if \\( \\{E_n\\}_n \\) is a sequence of events in sample space such that \\( E_i \\cap E_j = \\emptyset, \\forall \\, i \\neq j \\),
-    then \\( \\mathbb{P}\\left( \\bigcup_{i=1}^\\infty E_i \\right) = \\sum_{i=1}^\\infty \\mathbb{P}(E_i) \\)`,
-    `4. \\( \\mathbb{P}(E) \\geq 0 \\) for any event E in Sample Space.`
+    '1','2','3','4'
   ],
-  correctAnswer:  `2. Suppose \\( A, B \\in \\mathcal{F} \\) where \\( \\mathcal{F} \\) is the sample space, if \\( A \\subseteq B \\), then
-    \\[ \\mathbb{P}(B) = \\mathbb{P}(A) + \\mathbb{P}(A \\cup B^c) \\]`,
+  correctAnswer:  `2`,
   subject: 'math',
   difficulty: 'medium'
 }
