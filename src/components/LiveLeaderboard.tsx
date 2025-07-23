@@ -7,6 +7,7 @@ import { Trophy, Medal, Award, RotateCcw, Home, Users, Zap, Target } from "lucid
 import { useLeaderboard } from "@/hooks/useLeaderboard";
 import { useAuth } from "@/hooks/useAuth";
 import { CountdownTimer } from "@/components/CountdownTimer";
+import TillEndDate from "@/components/TillEndDate";
 
 interface Participant {
   id: string;
@@ -26,7 +27,7 @@ interface LiveLeaderboardProps {
   quizEndTime?: string; // Format: "HH:MM" (24-hour format)
 }
 
-export const LiveLeaderboard = ({ currentParticipant, onPlayAgain, onGoHome, quizEndTime = "23:59" }: LiveLeaderboardProps) => {
+export const LiveLeaderboard = ({ currentParticipant, onPlayAgain, onGoHome, quizEndTime = <TillEndDate/>}: LiveLeaderboardProps) => {
   const { leaderboard, totalParticipants, loading } = useLeaderboard();
   const { logout } = useAuth();
   
