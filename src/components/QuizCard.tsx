@@ -125,9 +125,9 @@ export const QuizCard = ({
                 </div>
               </div>
             </div>
-            <CardTitle className="text-xl text-foreground leading-relaxed">
-              dangerouslySetInnerHTML={{ __html: question.question }}
-            </CardTitle>
+           <CardTitle className="text-xl text-foreground leading-relaxed">
+              <span dangerouslySetInnerHTML={{ __html: question.question }} />
+           </CardTitle>
           </CardHeader>
 
           <CardContent className="space-y-6">
