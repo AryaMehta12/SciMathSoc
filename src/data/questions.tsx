@@ -13,7 +13,7 @@ export const sampleQuestions: Question[] = [
   {  
     id: 2,
     type: 'text-input',
-    question: `What is the first name of the person who made the official SciMathSoc Website <br/><p style="font-family: Comic Sans MS; color: red; font-weight: bold; font-style: italic;">To see the light, one needs to enter the dark...</p> <br/> Answer in all caps eg: XAVIER  <br/> <span style={{ fontSize: "0.8em",  color: "cyan"  }}><small>Answer to all easter Egg questions are on the website!(cant gpt this one 😔) </small></span>`,
+    question: `What is the first name of the person who made the official SciMathSoc Website <br/><p style="font-family: Comic Sans MS; color: red; font-weight: bold; font-style: italic;">To see the light, one needs to enter the dark...</p> <br/> Answer in all caps eg: XAVIER  <br/> <small style={{ fontSize: "0.8em",  color: "black"  }}>Answer to all easter Egg questions are on the website!(cant gpt this one 😔)</strong> </small>,
     correctAnswer: 'ANANY',
     subject: 'EasterEgg',
     difficulty: 'easy'
