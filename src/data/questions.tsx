@@ -13,8 +13,7 @@ export const sampleQuestions: Question[] = [
   {  
     id: 2,
     type: 'text-input',
-    question: `What is the first name of the person who made the official SciMathSoc Website <br/>(To see the light one needs to enter the dark)  Answer IN ALL CAPS EG: XAVIER , <span style={{ fontSize: "0.8em" }}><strong>
-**Answer to all easter Egg questions are on the website!(cant gpt this one 😔) </strong></span>`,
+    question: `What is the first name of the person who made the official SciMathSoc Website <br/><p style="font-family: Comic Sans MS; color: red; font-weight: bold; font-style: italic;">To see the light, one needs to enter the dark...</p> <br/> Answer IN ALL CAPS EG: XAVIER  , <span style={{ fontSize: "0.8em", , color: "cyan"  }}><small>Answer to all easter Egg questions are on the website!(cant gpt this one 😔) </small></span>`,
     correctAnswer: 'ANANY',
     subject: 'EasterEgg',
     difficulty: 'easy'
@@ -71,7 +70,7 @@ export const sampleQuestions: Question[] = [
   {
     id: 8,
     type: 'text-input',
-    question: 'Welcome to the final questionn, to get yourself on the leaderboard you must find the last easter egg on the website! <br/><p style="font-family: Comic Sans MS; color: red; font-weight: bold; font-style: italic;">To become worthy, find a tiny piece of our Mind Stone) </p>',
+    question: 'Welcome to the final questionn, to get yourself on the leaderboard you must find the last easter egg on the website! <br/>To become worthy, find a tiny piece of our Mind Stone </p><br/> Enter the one and only number hidden there to claim your throne. <br/> Your destiny awaits. 🧠💎',
     correctAnswer: '2006',
     subject: 'EasterEgg',
     difficulty: 'hard'
