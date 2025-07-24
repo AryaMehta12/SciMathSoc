@@ -10,15 +10,15 @@ export const sampleQuestions: Question[] = [
     subject: 'math',
     difficulty: 'medium'
   },
-  {
+  {  
     id: 2,
-    type: 'multiple-choice',
-    question: 'You choose 3 unknown natural numbers x, y, z. I can ask you two expressions of the form a·x + b·y + c·z, where I choose integers a, b, c. \n Can I always determine x, y, z using just these two responses?',
-    options: ['yes','no'],
-    correctAnswer: 'yes',
-    subject: 'math',
-    difficulty: 'hard'
+    type: 'text-input',
+    question: 'What is the first name of the person who made the official SciMathSoc Website (To see the light one needs to enter the dark) \n Answer IN ALL CAPS EG: XAVIER , **Answer to all easter Egg questions are on the website!(cant gpt this one 😔) ',
+    correctAnswer: 'ANANY',
+    subject: 'EasterEgg',
+    difficulty: 'easy'
   },
+
   {
     id: 3,
     type: 'multiple-choice',
@@ -35,7 +35,7 @@ export const sampleQuestions: Question[] = [
     options: ['yes','no'],
     correctAnswer: 'no',
     subject: 'phy',
-    difficulty: 'easy'
+    difficulty: 'medium'
   },
   {
   id: 5,
@@ -47,7 +47,35 @@ export const sampleQuestions: Question[] = [
   correctAnswer:  `4`,
   subject: 'math',
   difficulty: 'medium'
-}
+  },
+  {
+    id: 4,
+    type: 'multiple-choice',
+    question: 'You have three quantum particles in a box. Each time any two particles interact, they both switch to a new quantum state distinct from their previous states (but always among three possible states: A, B, C). Is it ever possible, by repeatedly allowing pairs to interact, for all three particles to end up in the same quantum state? ',
+    options: ['yes','no'],
+    correctAnswer: 'no',
+    subject: 'phy',
+    difficulty: 'medium'
+  },
+
+  {
+    id: 7,
+    type: 'multiple-choice',
+    question: 'You choose 3 unknown natural numbers x, y, z. I can ask you two expressions of the form a·x + b·y + c·z, where I choose integers a, b, c. \n Can I always determine x, y, z using just these two responses?',
+    options: ['yes','no'],
+    correctAnswer: 'yes',
+    subject: 'math',
+    difficulty: 'hard'
+  },
+  {
+    id: 8,
+    type: 'text-input',
+    question: 'Welcome to the final questionn, to get yourself on the leaderboard you must find the last easter egg on the website! (To become worthy, find a tiny piece of our Mind Stone) ',
+    correctAnswer: '2006',
+    subject: 'EasterEgg',
+    difficulty: 'hard'
+
+  },
 
   // {
   //   id: 5,

@@ -11,7 +11,7 @@ export interface Question {
   question: string;
   options?: string[];
   correctAnswer: string;
-  subject: 'math' | 'phy' | 'fun';
+  subject: 'math' | 'phy' | 'EasterEgg';
   difficulty: 'easy' | 'medium' | 'hard';
 }
 
