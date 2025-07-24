@@ -70,7 +70,7 @@ export const sampleQuestions: Question[] = [
   {
     id: 8,
     type: 'text-input',
-    question: 'Welcome to the final questionn, to get yourself on the leaderboard you must find the last easter egg on the website! <br/><p style="font-family: Comic Sans MS; color: red; font-weight: bold; font-style: italic;">To become worthy, find a tiny piece of our Mind Stone </p><br/> To become worthy, find a tiny piece of our Mind Stone </p><br/> Enter the one and only number hidden there to claim your throne. <br/> Your destiny awaits. 🧠💎',
+    question: 'Welcome to the final questionn, to get yourself on the leaderboard you must find the last easter egg on the website! <br/><p style="font-family: Comic Sans MS; color: red; font-weight: bold; font-style: italic;">To become worthy, find a tiny piece of our Mind Stone... </p><br/> To become worthy, find a tiny piece of our Mind Stone </p><br/> Enter the one and only number hidden there to claim your throne. <br/> Your destiny awaits. 🧠💎',
     correctAnswer: '2006',
     subject: 'EasterEgg',
     difficulty: 'hard'
