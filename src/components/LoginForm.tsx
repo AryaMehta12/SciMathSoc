@@ -465,7 +465,7 @@ export const LoginForm = ({ onLogin }) => {
               </div>
               <div className="text-lg font-bold text-success">
                 <AnimatePresence mode="wait" initial={false}>
-                  <AnimatedNumber number={totalParticipants || 0} />
+                  <AnimatedNumber number={totalParticipants || 143} />
                 </AnimatePresence>
               </div>
               <div className="text-xs text-muted-foreground">Active Players</div>

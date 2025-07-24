@@ -126,7 +126,7 @@ export const LiveLeaderboard = ({ currentParticipant, onPlayAgain, onGoHome, qui
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Your Result Card */}
           <div className="lg:col-span-1">
-            <Card className={`bg-gradient-card border-border/50 shadow-card h-full ${isTopThree ? 'winner-card' : ''}`}>
+            <Card className={`bg-gradient-card border-border/50 shadow-card h-full ${true ? 'winner-card' : ''}`}>
               <CardHeader className="text-center">
                 <CardTitle className="text-heading text-foreground flex items-center justify-center space-x-2">
                   <span>Your Result</span>
